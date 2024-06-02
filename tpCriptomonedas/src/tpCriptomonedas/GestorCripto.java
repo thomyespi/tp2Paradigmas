@@ -43,30 +43,34 @@ public class GestorCripto {
 		return true;
 	}
 
-	public boolean modificarCriptomonedaPorSimbolo(Criptomoneda criptoModificada) throws IOException {
+	public synchronized boolean modificarCriptomonedaPorSimbolo(Criptomoneda criptoModificada) throws IOException {
 
 		for (Criptomoneda cripto : this.criptomonedas) {
 			if (cripto.getSimbolo().equals(criptoModificada.getSimbolo())) {
 				cripto.setNombre(criptoModificada.getNombre());
 				cripto.setPrecioDolar(criptoModificada.getPrecioDolar());
 				actualizarArchivoCriptomonedas();
-			}	
+			}
 		}
 		throw new IllegalArgumentException(
 				"La criptomoneda con el símbolo " + criptoModificada.getSimbolo() + " no existe.");
 	}
 
-	public boolean eliminarCriptomoneda(Criptomoneda criptoAEliminar) throws IOException {
-		if (this.criptomonedas.remove(criptoAEliminar)) {
-			actualizarArchivoCriptomonedas();
-			return true;
-		} else {
-			throw new IllegalArgumentException(
-					"La criptomoneda con el símbolo " + criptoAEliminar.getSimbolo() + " no existe.");
+	public synchronized boolean eliminarCriptomoneda(Criptomoneda criptoAEliminar) throws IOException {
+		for (Mercado mercado : this.mercados) {
+			if (mercado.getCripto().equals(criptoAEliminar)) {
+				this.mercados.remove(mercado);
+				this.criptomonedas.remove(criptoAEliminar);
+				actualizarArchivoCriptomonedas();
+				actualizarArchivoMercados();
+				return true;
+			}
 		}
+		throw new IllegalArgumentException(
+				"La criptomoneda con el símbolo " + criptoAEliminar.getSimbolo() + " no existe.");
 	}
 
-	public Criptomoneda consultarCriptomoneda(String simbolo) throws IOException {
+	public synchronized Criptomoneda consultarCriptomoneda(String simbolo) throws IOException {
 		for (Criptomoneda cripto : this.criptomonedas) {
 			if (cripto.getSimbolo().equals(simbolo)) {
 				return cripto;
@@ -75,7 +79,7 @@ public class GestorCripto {
 		throw new IllegalArgumentException("La criptomoneda con el símbolo " + simbolo + " no existe.");
 	}
 
-	private void actualizarArchivoCriptomonedas() throws IOException {
+	private synchronized void actualizarArchivoCriptomonedas() throws IOException {
 		FileWriter fileWriter = new FileWriter("archivos/in/Criptomonedas.in");
 
 		PrintWriter printWriter = new PrintWriter(fileWriter);
@@ -89,7 +93,7 @@ public class GestorCripto {
 		printWriter.close();
 	}
 
-	private void actualizarArchivoMercados() throws IOException {
+	private synchronized void actualizarArchivoMercados() throws IOException {
 		FileWriter fileWriter = new FileWriter("archivos/in/Mercados.in");
 
 		PrintWriter printWriter = new PrintWriter(fileWriter);

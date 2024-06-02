@@ -29,7 +29,6 @@ public class Archivo {
 				linea = scanner.nextLine();
 				String[] partes = linea.split("\\|");
 
-			//	String nombre = partes[0];
 				String nombre = partes[0];
 				String simbolo = partes[1];
 				double precioDolar = Double.parseDouble(partes[2]);
