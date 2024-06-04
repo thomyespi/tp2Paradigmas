@@ -86,7 +86,7 @@ public class GestorCripto {
 		return true;
 	}
 
-	private synchronized boolean buscarCriptomoneda(String simbolo) {
+	public synchronized boolean buscarCriptomoneda(String simbolo) {
 		for (Criptomoneda cripto : this.criptomonedas) {
 			if (cripto.getSimbolo().equals(simbolo)) {
 				return true;

@@ -81,11 +81,21 @@ public class GestorSistema {
 		System.out.println("================= [3] AGREGAR CRIPTOMONEDA ================\n");
 		System.out.println("Simbolo: ");
 		simbolo = scanner.nextLine();
+
+		if (gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
+			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' ya existe!\n");
+			return;
+		}
+
 		System.out.println("Nombre:");
 		nombre = scanner.nextLine();
 		System.out.println("Valor: ");
 		try {
 			precio = Double.parseDouble(scanner.nextLine());
+			if (precio < 0) {
+				System.out.println("El precio no puede ser negativo!\n");
+				return;
+			}
 		} catch (Exception e) {
 			System.out.println("Valor no valido!\n");
 			return;
@@ -96,7 +106,7 @@ public class GestorSistema {
 			this.gestor.agregarCriptomoneda(nuevaCripto);
 			System.out.println("\nSe agrego correctamente\n");
 		} catch (Exception e) {
-			System.out.println("Ocurrio un error!\n");
+			System.out.println("Ocurrió un error al agregar la Criptomoneda!\\n");
 		}
 	}
 
@@ -104,11 +114,17 @@ public class GestorSistema {
 		System.out.println("================= [4] MODIFICAR NOMBRE CRIPTOMONEDA ================\n");
 		System.out.println("Simbolo: ");
 		String simbolo = scanner.nextLine();
+
+		if (!gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
+			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' NO existe!\n");
+			return;
+		}
+
 		System.out.println("Nuevo Nombre:");
 		String nuevoNombre = scanner.nextLine();
 		try {
 			this.gestor.modificarNombreCriptomoneda(simbolo.toUpperCase(), nuevoNombre);
-			System.out.println("Nombre modificado correctamente\n");
+			System.out.println("\nNombre modificado correctamente\n");
 		} catch (Exception e) {
 			System.out.println("Ocurrio un error!\n");
 		}
@@ -118,6 +134,12 @@ public class GestorSistema {
 		System.out.println("================= [5] MODIFICAR PRECIO CRIPTOMONEDA ================\n");
 		System.out.println("Simbolo: ");
 		String simbolo = scanner.nextLine();
+
+		if (!gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
+			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' NO existe!\n");
+			return;
+		}
+
 		System.out.println("Nuevo Precio:");
 		double nuevoPrecio;
 		try {
@@ -154,6 +176,11 @@ public class GestorSistema {
 			case 1:
 				System.out.println("Simbolo: ");
 				simbolo = scanner.nextLine();
+
+				if (!gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
+					System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' NO existe!\n");
+					return;
+				}
 
 				System.out.println("¿Estas seguro que queres eliminar la criptomoneda '" + simbolo + "'?");
 				System.out.println("[1] SI\n[2] NO");
