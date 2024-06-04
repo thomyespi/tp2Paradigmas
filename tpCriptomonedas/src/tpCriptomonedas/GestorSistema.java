@@ -5,19 +5,17 @@ import java.util.Scanner;
 public class GestorSistema {
 
 	private GestorCripto gestor;
+	private Scanner scanner;
 
 	public GestorSistema() {
-
 		this.gestor = new GestorCripto();
+		this.scanner = new Scanner(System.in);
 	}
 
 	public void mostrarMenu() {
-
-		final Scanner scanner = new Scanner(System.in);
 		int opcion;
 
 		do {
-
 			System.out.println("================== MENU =================");
 			System.out.println("=========================================\n");
 
@@ -32,19 +30,18 @@ public class GestorSistema {
 				opcion = Integer.parseInt(scanner.nextLine());
 			} catch (Exception e) {
 				opcion = -1;
-			}finally {
-				scanner.close();
 			}
 
 			switch (opcion) {
+
 			case 1:
-				 this.gestor.getCriptomonedas();
+				this.mostrarCriptomonedas();
 				break;
 			case 2:
-				this.gestor.getMercados();
+				this.mostrarMercados();
 				break;
 			case 3:
-				// this.addCryptoMenu();
+				this.agregarCripto();
 				break;
 			case 4:
 				// this.updateCryptoMenu();
@@ -57,9 +54,75 @@ public class GestorSistema {
 				break;
 			default:
 				System.out.println("La opcion elegida no es Valida!!\n");
+
 			}
 
 		} while (opcion != 0);
 
+		scanner.close();
+	}
+
+	private void mostrarCriptomonedas() {
+		System.out.println("================= [1] TODAS LAS CRIPTOMONEDAS ================\n");
+		System.out.println(this.gestor.getCriptomonedas());
+	}
+
+	private void mostrarMercados() {
+		System.out.println("================= [1] TODOS LOS MERCADOS ================\n");
+		System.out.println(this.gestor.getMercados());
+	}
+
+	private void agregarCripto() {
+		int opcion;
+		String simbolo;
+		String nombre;
+		double precio;
+
+		do {
+			System.out.println("================= [3] AGREGAR CRIPTOMONEDA ================\n");
+			System.out.println("[1] Agregar criptomoneda");
+			System.out.println("[0] Volver atras");
+			System.out.println("Elegir opcion: ");
+
+			try {
+				opcion = Integer.parseInt(scanner.nextLine());
+			} catch (Exception e) {
+				opcion = -1;
+			}
+
+			switch (opcion) {
+			case 1:
+				System.out.println("Simbolo: ");
+				simbolo = scanner.nextLine();
+				System.out.println("Nombre:");
+				nombre = scanner.nextLine();
+				System.out.println("Valor: ");
+
+				try {
+					precio = Double.parseDouble(scanner.nextLine());
+				} catch (Exception e) {
+					System.out.println("Valor no valido!\n");
+					break;
+				}
+
+				Criptomoneda nuevaCripto = new Criptomoneda(nombre, simbolo.toUpperCase(), precio);
+
+				try {
+					this.gestor.agregarCriptomoneda(nuevaCripto);
+				} catch (Exception e) {
+					System.out.println("Ocurrio un error!\n");
+				}
+
+				System.out.println(nuevaCripto == null ? "No se pudo Agregar!" : "\nSe agrego correctamente\n");
+				break;
+
+			case 0:
+				break;
+
+			default:
+				System.out.println("Opcion NO valida!!\n");
+
+			}
+		} while (opcion != 0);
 	}
 }
