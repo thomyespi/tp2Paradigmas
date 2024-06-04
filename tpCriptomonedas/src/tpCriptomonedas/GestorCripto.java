@@ -27,14 +27,12 @@ public class GestorCripto {
 
 	public synchronized boolean agregarCriptomoneda(Criptomoneda nuevaCripto) throws IOException {
 
-		for (Criptomoneda cripto : this.criptomonedas) {
-			if (cripto.getSimbolo().equals(nuevaCripto.getSimbolo())) {
-				throw new IllegalArgumentException(
-						"La criptomoneda con el símbolo " + nuevaCripto.getSimbolo() + " ya existe.");
-			}
+		if (buscarCriptomoneda(nuevaCripto.getSimbolo())) {
+			throw new IllegalArgumentException(
+					"La criptomoneda con el símbolo " + nuevaCripto.getSimbolo() + " ya existe.");
 		}
-		this.criptomonedas.add(nuevaCripto);
 
+		this.criptomonedas.add(nuevaCripto);
 		Mercado nuevoMercado = new Mercado(nuevaCripto, "0", "0", "0", "0", "0");
 		this.mercados.add(nuevoMercado);
 
@@ -43,40 +41,58 @@ public class GestorCripto {
 		return true;
 	}
 
-	public synchronized boolean modificarCriptomonedaPorSimbolo(Criptomoneda criptoModificada) throws IOException {
+	public synchronized boolean modificarNombreCriptomoneda(String simbolo, String nuevoNombre) throws IOException {
+		if (!buscarCriptomoneda(simbolo)) {
+			throw new IllegalArgumentException("La criptomoneda con el símbolo " + simbolo + " NO existe.");
+		}
 
 		for (Criptomoneda cripto : this.criptomonedas) {
-			if (cripto.getSimbolo().equals(criptoModificada.getSimbolo())) {
-				cripto.setNombre(criptoModificada.getNombre());
-				cripto.setPrecioDolar(criptoModificada.getPrecioDolar());
+			if (cripto.getSimbolo().equals(simbolo)) {
+				cripto.setNombre(nuevoNombre);
 				actualizarArchivoCriptomonedas();
-			}
-		}
-		throw new IllegalArgumentException(
-				"La criptomoneda con el símbolo " + criptoModificada.getSimbolo() + " no existe.");
-	}
-
-	public synchronized boolean eliminarCriptomoneda(Criptomoneda criptoAEliminar) throws IOException {
-		for (Mercado mercado : this.mercados) {
-			if (mercado.getCripto().equals(criptoAEliminar)) {
-				this.mercados.remove(mercado);
-				this.criptomonedas.remove(criptoAEliminar);
-				actualizarArchivoCriptomonedas();
-				actualizarArchivoMercados();
 				return true;
 			}
 		}
-		throw new IllegalArgumentException(
-				"La criptomoneda con el símbolo " + criptoAEliminar.getSimbolo() + " no existe.");
+		return false;
 	}
 
-	public synchronized Criptomoneda consultarCriptomoneda(String simbolo) throws IOException {
+	public synchronized boolean modificarPrecioCriptomoneda(String simbolo, double nuevoPrecio) throws IOException {
+		if (!buscarCriptomoneda(simbolo)) {
+			throw new IllegalArgumentException("La criptomoneda con el símbolo " + simbolo + " NO existe.");
+		}
+
 		for (Criptomoneda cripto : this.criptomonedas) {
 			if (cripto.getSimbolo().equals(simbolo)) {
-				return cripto;
+				cripto.setPrecioDolar(nuevoPrecio);
+				actualizarArchivoCriptomonedas();
+				return true;
 			}
 		}
-		throw new IllegalArgumentException("La criptomoneda con el símbolo " + simbolo + " no existe.");
+		return false;
+	}
+
+	public synchronized boolean eliminarCriptomoneda(String simboloCriptoAEliminar) throws IOException {
+		if (!buscarCriptomoneda(simboloCriptoAEliminar)) {
+			throw new IllegalArgumentException(
+					"La criptomoneda con el símbolo " + simboloCriptoAEliminar + " NO existe.");
+		}
+
+		criptomonedas.removeIf(cripto -> cripto.getSimbolo().equals(simboloCriptoAEliminar));
+
+		mercados.removeIf(mercado -> mercado.getCripto().getSimbolo().equals(simboloCriptoAEliminar));
+
+		actualizarArchivoCriptomonedas();
+		actualizarArchivoMercados();
+		return true;
+	}
+
+	private synchronized boolean buscarCriptomoneda(String simbolo) {
+		for (Criptomoneda cripto : this.criptomonedas) {
+			if (cripto.getSimbolo().equals(simbolo)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private synchronized void actualizarArchivoCriptomonedas() throws IOException {
