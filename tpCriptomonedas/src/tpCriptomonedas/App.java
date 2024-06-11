@@ -5,7 +5,7 @@ public class App {
 
 		GestorSistema sistema = new GestorSistema();
 
-		sistema.mostrarMenu();
+		sistema.iniciarSesion();
 
 		System.out.println("\nEl programa finalizo bien. Gracias por participar");
 

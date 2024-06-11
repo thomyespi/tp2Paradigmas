@@ -6,13 +6,53 @@ public class GestorSistema {
 
 	private GestorCripto gestor;
 	private Scanner scanner;
+	private GestorUsuarios gestorUsuarios;
 
 	public GestorSistema() {
 		this.gestor = new GestorCripto();
+		this.gestorUsuarios = new GestorUsuarios();
 		this.scanner = new Scanner(System.in);
 	}
 
-	public void mostrarMenu() {
+	public void iniciarSesion() {
+
+		System.out.println("Ingrese su nombre de usuario:");
+		String nombreUsuario = scanner.nextLine();
+		Usuario usuario = gestorUsuarios.buscarUsuario(nombreUsuario);
+
+		if (usuario != null) {
+			if (usuario instanceof Administrador) {
+				System.out.println("¡Bienvenido, administrador " + nombreUsuario + "!\n");
+				mostrarMenuAdmin();
+				
+			} else {
+				System.out.println("¡Bienvenido, " + nombreUsuario + "!");
+				mostrarMenuTrader(usuario);
+			}
+		} else {
+			System.out.println("El usuario no existe. ¿Desea registrarse como trader? (S/N)");
+			String respuesta = scanner.nextLine().toUpperCase();
+
+			if (respuesta.equals("S")) {
+				gestorUsuarios.registrarTrader(nombreUsuario);
+				usuario = gestorUsuarios.buscarUsuario(nombreUsuario);
+
+				System.out.println("¡Usuario registrado como trader!");
+				mostrarMenuTrader(usuario);
+			} else {
+				System.out.println("Muchas gracias.");
+				System.exit(0);
+			}
+		}
+	}
+	
+
+	private void mostrarMenuTrader(Usuario usuario) {
+		System.out.println("Hola trader");
+		System.exit(0);
+	}
+
+	private void mostrarMenuAdmin() {
 		int opcion;
 
 		do {
