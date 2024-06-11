@@ -66,13 +66,11 @@ public class Archivo {
 				String simbolo = partes[0];
 				String capacidad = partes[1];
 				String vol24h = partes[2];
-				String volTotal = partes[3];
-				String var24h = partes[4];
-				String var7d = partes[5];
+				String var7d = partes[3];
 
 				for (Criptomoneda cripto : criptos) {
 					if (cripto.getSimbolo().equals(simbolo)) {
-						Mercado datoLeido = new Mercado(cripto, capacidad, vol24h, volTotal, var24h, var7d);
+						Mercado datoLeido = new Mercado(cripto, capacidad, vol24h, var7d);
 						mercado.add(datoLeido);
 					}
 				}
@@ -83,6 +81,51 @@ public class Archivo {
 			scanner.close();
 		}
 		return mercado;
+	}
+
+	public static List<Usuario> leerArchivoUsuarios() throws IOException {
+
+		List<Usuario> usuarios = new ArrayList<Usuario>();
+
+		try {
+			file = new File("archivos/in/Usuarios.in");
+
+			scanner = new Scanner(file);
+
+			scanner.useLocale(Locale.ENGLISH);
+
+			String linea = scanner.nextLine();
+
+			while (scanner.hasNextLine()) {
+				String[] partes = linea.split("\\|");
+
+				if (partes.length == 2) {
+
+					String nombre = partes[0];
+					String perfil = partes[1];
+
+					Administrador admin = new Administrador(nombre, perfil);
+
+					usuarios.add(admin);
+
+				} else if (partes.length == 4) {
+
+					String nombre = partes[0];
+					String numeroCuentaBancaria = partes[1];
+					String nombreBanco = partes[2];
+					double saldoActual = Double.parseDouble(partes[3]);
+
+					Trader trader = new Trader(nombre, numeroCuentaBancaria, nombreBanco, saldoActual);
+
+					usuarios.add(trader);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}
+		return usuarios;
 	}
 
 }

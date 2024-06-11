@@ -33,7 +33,7 @@ public class GestorCripto {
 		}
 
 		this.criptomonedas.add(nuevaCripto);
-		Mercado nuevoMercado = new Mercado(nuevaCripto, "0", "0", "0", "0", "0");
+		Mercado nuevoMercado = new Mercado(nuevaCripto, "0", "0", "0");
 		this.mercados.add(nuevoMercado);
 
 		actualizarArchivoCriptomonedas();
@@ -119,8 +119,7 @@ public class GestorCripto {
 
 		for (Mercado mercado : this.mercados) {
 			printWriter.println(mercado.getCripto().getSimbolo() + "|" + mercado.getCapacidad() + "|"
-					+ mercado.getVolumen24h() + "|" + mercado.getVolumenTotal() + "|" + mercado.getVariacion24h() + "|"
-					+ mercado.getVariacion7d());
+					+ mercado.getVolumen24h() + "|" + mercado.getVariacion7d());
 		}
 
 		printWriter.close();
