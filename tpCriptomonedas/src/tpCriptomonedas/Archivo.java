@@ -85,7 +85,7 @@ public class Archivo {
 
 	public static List<Usuario> leerArchivoUsuarios() throws IOException {
 
-		List<Usuario> usuarios = new ArrayList<Usuario>();
+		List<Usuario> usuarios = new ArrayList<>();
 
 		try {
 			file = new File("archivos/in/Usuarios.in");
@@ -94,36 +94,31 @@ public class Archivo {
 
 			scanner.useLocale(Locale.ENGLISH);
 
-			String linea = scanner.nextLine();
-
 			while (scanner.hasNextLine()) {
+				String linea = scanner.nextLine();
 				String[] partes = linea.split("\\|");
 
 				if (partes.length == 2) {
-
 					String nombre = partes[0];
 					String perfil = partes[1];
-
 					Administrador admin = new Administrador(nombre, perfil);
-
 					usuarios.add(admin);
 
 				} else if (partes.length == 4) {
-
 					String nombre = partes[0];
 					String numeroCuentaBancaria = partes[1];
 					String nombreBanco = partes[2];
 					double saldoActual = Double.parseDouble(partes[3]);
-
 					Trader trader = new Trader(nombre, numeroCuentaBancaria, nombreBanco, saldoActual);
-
 					usuarios.add(trader);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			scanner.close();
+			if (scanner != null) {
+				scanner.close();
+			}
 		}
 		return usuarios;
 	}
