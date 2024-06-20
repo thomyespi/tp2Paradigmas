@@ -1,5 +1,6 @@
 package tpCriptomonedas;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class GestorSistema {
@@ -14,7 +15,7 @@ public class GestorSistema {
 		this.scanner = new Scanner(System.in);
 	}
 
-	public void iniciarSesion() {
+	public void iniciarSesion() throws IOException {
 
 		System.out.println("Ingrese su nombre de usuario:");
 		String nombreUsuario = scanner.nextLine();
@@ -37,7 +38,8 @@ public class GestorSistema {
 				gestorUsuarios.registrarTrader(nombreUsuario);
 				usuario = gestorUsuarios.buscarUsuario(nombreUsuario);
 
-				System.out.println("¡Usuario registrado como trader!");
+				System.out.println("\n¡Usuario registrado como Trader!");
+				System.out.println("\n¡Bienvenido, " + nombreUsuario + "!");
 				mostrarMenuTrader(usuario);
 			} else {
 				System.out.println("Muchas gracias.");
@@ -48,15 +50,61 @@ public class GestorSistema {
 	
 
 	private void mostrarMenuTrader(Usuario usuario) {
-		System.out.println("Hola trader");
-		System.exit(0);
+		int opcion;
+
+		do {
+			System.out.println("================== MENU TRADER =================");
+			System.out.println("=========================================\n");
+
+			System.out.println("[1] Comprar Criptomonedas");
+			System.out.println("[2] Vender Criptomonedas");
+			System.out.println("[3] Consultar Criptomoneda");
+			System.out.println("[4] Recomendar Criptomonedas");
+			System.out.println("[5] Consultar estado actual del mercado");
+			System.out.println("[6] Visualizar archivo de transacciones (histórico)");
+			System.out.println("[0] Salir");
+			System.out.println("\nSeleccionar Opcion: ");
+			try {
+				opcion = Integer.parseInt(scanner.nextLine());
+			} catch (Exception e) {
+				opcion = -1;
+			}
+
+			switch (opcion) {
+			case 1:
+			//	this.mostrarCriptomonedas();
+			//	break;
+			case 2:
+			//	this.mostrarMercados();
+			//	break;
+			case 3:
+			//	this.agregarCripto();
+			//	break;
+			case 4:
+			//	this.modificarNombreCripto();
+			//	break;
+			case 5:
+			//	this.modificarPrecioCripto();
+			//	break;
+			case 6:
+			//	this.eliminarCripto();
+			//	break;
+			case 0:
+				System.out.println("Programa terminado");
+				break;
+			default:
+				System.out.println("La opcion elegida no es Valida!!\n");
+			}
+		} while (opcion != 0);
+
+		scanner.close();
 	}
 
 	private void mostrarMenuAdmin() {
 		int opcion;
 
 		do {
-			System.out.println("================== MENU =================");
+			System.out.println("================== MENU ADMINISTRADOR =================");
 			System.out.println("=========================================\n");
 
 			System.out.println("[1] Mostrar todas las Criptomonedas");
@@ -65,7 +113,7 @@ public class GestorSistema {
 			System.out.println("[4] Modificar Nombre Criptomoneda");
 			System.out.println("[5] Modificar Precio Criptomoneda");
 			System.out.println("[6] Eliminar Criptomoneda");
-			System.out.println("[0] Finalizar Programa");
+			System.out.println("[0] Salir");
 			System.out.println("\nSeleccionar Opcion: ");
 			try {
 				opcion = Integer.parseInt(scanner.nextLine());
