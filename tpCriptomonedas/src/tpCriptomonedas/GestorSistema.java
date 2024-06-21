@@ -74,7 +74,7 @@ public class GestorSistema {
 				this.comprarCriptomonedas(usuario.getNombre());
 				break;
 			case 2:
-				this.venderCriptomonedas(usuario.getNombre());
+		//		this.venderCriptomonedas(usuario.getNombre());
 				break;
 			case 3:
 				this.mostrarUnaCripto();
