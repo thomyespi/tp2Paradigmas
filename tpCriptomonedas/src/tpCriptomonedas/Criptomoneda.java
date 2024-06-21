@@ -5,11 +5,13 @@ public class Criptomoneda {
 	private String nombre;
 	private String simbolo;
 	private double precioDolar;
+	private int cantCompras;
 
 	public Criptomoneda(String nombre, String simbolo, double precioDolar) {
 		this.nombre = nombre;
 		this.simbolo = simbolo;
 		this.precioDolar = precioDolar;
+		this.cantCompras = 998;
 	}
 
 	@Override
@@ -17,6 +19,7 @@ public class Criptomoneda {
 		return "\n" + "[nombre= " + nombre + "\n" + "simbolo= " + simbolo + "\n" + "precioDolar= " + precioDolar + "]"
 				+ "\n";
 	}
+	
 
 	public String getNombre() {
 		return nombre;
@@ -28,6 +31,10 @@ public class Criptomoneda {
 
 	public double getPrecioDolar() {
 		return precioDolar;
+	}
+	
+	public double getCompras() {
+		return this.cantCompras;
 	}
 
 	public void setNombre(String nombre) {
@@ -41,5 +48,10 @@ public class Criptomoneda {
 	public void setPrecioDolar(double precioDolar) {
 		this.precioDolar = precioDolar;
 	}
+	
+	public void aumentarCompra() {
+		this.cantCompras ++;
+	}
+
 
 }

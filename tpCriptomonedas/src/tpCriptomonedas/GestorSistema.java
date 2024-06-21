@@ -25,7 +25,7 @@ public class GestorSistema {
 			if (usuario instanceof Administrador) {
 				System.out.println("¡Bienvenido, administrador " + nombreUsuario + "!\n");
 				mostrarMenuAdmin();
-				
+
 			} else {
 				System.out.println("¡Bienvenido, " + nombreUsuario + "!");
 				mostrarMenuTrader(usuario);
@@ -47,7 +47,6 @@ public class GestorSistema {
 			}
 		}
 	}
-	
 
 	private void mostrarMenuTrader(Usuario usuario) {
 		int opcion;
@@ -72,23 +71,23 @@ public class GestorSistema {
 
 			switch (opcion) {
 			case 1:
-			//	this.mostrarCriptomonedas();
-			//	break;
+				this.comprarCriptomonedas(usuario.getNombre());
+				break;
 			case 2:
-			//	this.mostrarMercados();
-			//	break;
+				// this.mostrarMercados();
+				// break;
 			case 3:
-			//	this.agregarCripto();
-			//	break;
+				this.mostrarUnaCripto();
+				break;
 			case 4:
-			//	this.modificarNombreCripto();
-			//	break;
+				// this.modificarNombreCripto();
+				// break;
 			case 5:
-			//	this.modificarPrecioCripto();
-			//	break;
+				this.mostrarMercados();
+				 break;
 			case 6:
-			//	this.eliminarCripto();
-			//	break;
+				// this.eliminarCripto();
+				// break;
 			case 0:
 				System.out.println("Programa terminado");
 				break;
@@ -100,6 +99,47 @@ public class GestorSistema {
 		scanner.close();
 	}
 
+	private void comprarCriptomonedas(String usuario) {
+
+		System.out.println("================= [1] COMPRAR CRIPTOMONEDA ================\n");
+
+		System.out.println("Ingresa el Simbolo: ");
+		String simbolo = scanner.nextLine();
+
+		if (!gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
+			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' NO existe!\n");
+			return;
+		}
+
+		this.gestor.mostrarUnaCripto(simbolo.toUpperCase());
+
+		System.out.println("\nIngresa el monto a comprar: ");
+		double monto = Double.parseDouble(scanner.nextLine());
+
+		System.out.println("\nEsta seguro que quiere realizar la compra? (S/N)");
+		String respuesta = scanner.nextLine().toUpperCase();
+		
+		if (respuesta.equals("S")) {
+			
+			if (!this.gestorUsuarios.validarSaldoUsuario(usuario, monto)) {
+				System.out.println("Saldo insuficiente. Ingrese el dinero faltante en su cuenta bancaria.");
+				return;
+			}
+			try {
+				this.gestor.comprarCripto(simbolo, monto);
+				this.gestorUsuarios.registrarCompra(usuario, simbolo, monto);
+				this.gestorUsuarios.actualizarSaldoUsuario(usuario, monto);
+			} catch (Exception e) {
+				System.out.println("Ocurrio un error");
+			}
+
+			System.out.println("\nLa compra fue realizada con exito");
+
+		} else
+			return;
+
+	}
+
 	private void mostrarMenuAdmin() {
 		int opcion;
 
@@ -108,11 +148,13 @@ public class GestorSistema {
 			System.out.println("=========================================\n");
 
 			System.out.println("[1] Mostrar todas las Criptomonedas");
-			System.out.println("[2] Mostrar todos los Mercados");
-			System.out.println("[3] Agregar Criptomoneda");
-			System.out.println("[4] Modificar Nombre Criptomoneda");
-			System.out.println("[5] Modificar Precio Criptomoneda");
-			System.out.println("[6] Eliminar Criptomoneda");
+			System.out.println("[2] Mostrar el Mercado");
+			System.out.println("[3] Consultar una criptomoneda");
+			System.out.println("[4] Agregar Criptomoneda");
+			System.out.println("[5] Modificar Nombre Criptomoneda");
+			System.out.println("[6] Modificar Simbolo Criptomoneda");
+			System.out.println("[7] Modificar Precio Criptomoneda");
+			System.out.println("[8] Eliminar Criptomoneda");
 			System.out.println("[0] Salir");
 			System.out.println("\nSeleccionar Opcion: ");
 			try {
@@ -129,15 +171,21 @@ public class GestorSistema {
 				this.mostrarMercados();
 				break;
 			case 3:
-				this.agregarCripto();
+				this.mostrarUnaCripto();
 				break;
 			case 4:
-				this.modificarNombreCripto();
+				this.agregarCripto();
 				break;
 			case 5:
-				this.modificarPrecioCripto();
+				this.modificarNombreCripto();
 				break;
 			case 6:
+				this.modificarSimboloCripto();
+				break;
+			case 7:
+				this.modificarPrecioCripto();
+				break;
+			case 8:
 				this.eliminarCripto();
 				break;
 			case 0:
@@ -157,8 +205,22 @@ public class GestorSistema {
 	}
 
 	private void mostrarMercados() {
-		System.out.println("================= [2] TODOS LOS MERCADOS ================\n");
+		System.out.println("================= [2] MERCADO ================\n");
 		System.out.println(this.gestor.getMercados());
+	}
+
+	private void mostrarUnaCripto() {
+		System.out.println("================= [3] MOSTRAR UNA CRIPTOMONEDA ================\n");
+
+		System.out.println("Ingresa el Simbolo: ");
+		String simbolo = scanner.nextLine();
+
+		if (!gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
+			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' NO existe!\n");
+			return;
+		}
+
+		this.gestor.mostrarUnaCripto(simbolo.toUpperCase());
 	}
 
 	private void agregarCripto() {
@@ -166,12 +228,45 @@ public class GestorSistema {
 		String nombre;
 		double precio;
 
-		System.out.println("================= [3] AGREGAR CRIPTOMONEDA ================\n");
+		System.out.println("================= [4] AGREGAR CRIPTOMONEDA ================\n");
 		System.out.println("Simbolo: ");
 		simbolo = scanner.nextLine();
 
 		if (gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
 			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' ya existe!\n");
+
+			System.out.println("Desea modificar algun parametro de la misma? S/N ");
+
+			String respuesta = scanner.nextLine().toUpperCase();
+
+			if (respuesta.equals("S")) {
+
+				System.out.println("================= MODIFICAR CRIPTOMONEDA ================\n");
+				System.out.println("[1] Modificar Nombre");
+				System.out.println("[2] Modificar Precio");
+				System.out.println("[3] Modificar Simbolo");
+				System.out.println("Elegir una opcion: ");
+
+				int opcion;
+
+				try {
+					opcion = Integer.parseInt(scanner.nextLine());
+				} catch (Exception e) {
+					opcion = -1;
+				}
+
+				switch (opcion) {
+
+				case 1:
+					modificarNombreCripto();
+				case 2:
+					modificarPrecioCripto();
+				case 3:
+					modificarSimboloCripto();
+				}
+			} else {
+				return;
+			}
 			return;
 		}
 
@@ -199,7 +294,7 @@ public class GestorSistema {
 	}
 
 	private void modificarNombreCripto() {
-		System.out.println("================= [4] MODIFICAR NOMBRE CRIPTOMONEDA ================\n");
+		System.out.println("================= [5] MODIFICAR NOMBRE CRIPTOMONEDA ================\n");
 		System.out.println("Simbolo: ");
 		String simbolo = scanner.nextLine();
 
@@ -218,8 +313,28 @@ public class GestorSistema {
 		}
 	}
 
+	private void modificarSimboloCripto() {
+		System.out.println("================= [6] MODIFICAR SIMBOLO CRIPTOMONEDA ================\n");
+		System.out.println("Ingrese el Simbolo de la cripto a modificar: ");
+		String simbolo = scanner.nextLine();
+
+		if (!gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
+			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' NO existe!\n");
+			return;
+		}
+
+		System.out.println("Ingrese Nuevo Simbolo:");
+		String nuevoSimbolo = scanner.nextLine();
+		try {
+			this.gestor.modificarSimboloCriptomoneda(simbolo.toUpperCase(), nuevoSimbolo.toUpperCase());
+			System.out.println("\nSimbolo modificado correctamente\n");
+		} catch (Exception e) {
+			System.out.println("Ocurrio un error!\n");
+		}
+	}
+
 	private void modificarPrecioCripto() {
-		System.out.println("================= [5] MODIFICAR PRECIO CRIPTOMONEDA ================\n");
+		System.out.println("================= [7] MODIFICAR PRECIO CRIPTOMONEDA ================\n");
 		System.out.println("Simbolo: ");
 		String simbolo = scanner.nextLine();
 
@@ -249,7 +364,7 @@ public class GestorSistema {
 		String simbolo;
 
 		do {
-			System.out.println("================= [6] ELIMINAR CRIPTOMONEDA ================\n");
+			System.out.println("================= [8] ELIMINAR CRIPTOMONEDA ================\n");
 			System.out.println("[1] Ingresar el simbolo del elemento");
 			System.out.println("[0] Volver atras");
 			System.out.println("Elegir una opcion: ");

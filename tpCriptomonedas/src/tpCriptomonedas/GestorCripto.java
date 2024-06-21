@@ -27,13 +27,8 @@ public class GestorCripto {
 
 	public synchronized boolean agregarCriptomoneda(Criptomoneda nuevaCripto) throws IOException {
 
-		if (buscarCriptomoneda(nuevaCripto.getSimbolo())) {
-			throw new IllegalArgumentException(
-					"La criptomoneda con el símbolo " + nuevaCripto.getSimbolo() + " ya existe.");
-		}
-
 		this.criptomonedas.add(nuevaCripto);
-		Mercado nuevoMercado = new Mercado(nuevaCripto, "0", "0", "0");
+		Mercado nuevoMercado = new Mercado(nuevaCripto, "500", "500", "+1.00%");
 		this.mercados.add(nuevoMercado);
 
 		actualizarArchivoCriptomonedas();
@@ -42,9 +37,6 @@ public class GestorCripto {
 	}
 
 	public synchronized boolean modificarNombreCriptomoneda(String simbolo, String nuevoNombre) throws IOException {
-		if (!buscarCriptomoneda(simbolo)) {
-			throw new IllegalArgumentException("La criptomoneda con el símbolo " + simbolo + " NO existe.");
-		}
 
 		for (Criptomoneda cripto : this.criptomonedas) {
 			if (cripto.getSimbolo().equals(simbolo)) {
@@ -56,10 +48,26 @@ public class GestorCripto {
 		return false;
 	}
 
-	public synchronized boolean modificarPrecioCriptomoneda(String simbolo, double nuevoPrecio) throws IOException {
-		if (!buscarCriptomoneda(simbolo)) {
-			throw new IllegalArgumentException("La criptomoneda con el símbolo " + simbolo + " NO existe.");
+	public synchronized boolean modificarSimboloCriptomoneda(String simbolo, String nuevoSimbolo) throws IOException {
+
+		for (Criptomoneda cripto : this.criptomonedas) {
+			if (cripto.getSimbolo().equals(simbolo)) {
+				cripto.setSimbolo(nuevoSimbolo);
+
+				for (Mercado mercado : this.mercados) {
+					if (mercado.getCripto().getSimbolo().equals(simbolo)) {
+						mercado.setSimboloCripto(nuevoSimbolo);
+					}
+				}
+				actualizarArchivoCriptomonedas();
+				actualizarArchivoMercados();
+				return true;
+			}
 		}
+		return false;
+	}
+
+	public synchronized boolean modificarPrecioCriptomoneda(String simbolo, double nuevoPrecio) throws IOException {
 
 		for (Criptomoneda cripto : this.criptomonedas) {
 			if (cripto.getSimbolo().equals(simbolo)) {
@@ -72,10 +80,6 @@ public class GestorCripto {
 	}
 
 	public synchronized boolean eliminarCriptomoneda(String simboloCriptoAEliminar) throws IOException {
-		if (!buscarCriptomoneda(simboloCriptoAEliminar)) {
-			throw new IllegalArgumentException(
-					"La criptomoneda con el símbolo " + simboloCriptoAEliminar + " NO existe.");
-		}
 
 		criptomonedas.removeIf(cripto -> cripto.getSimbolo().equals(simboloCriptoAEliminar));
 
@@ -93,6 +97,49 @@ public class GestorCripto {
 			}
 		}
 		return false;
+	}
+
+	public synchronized void mostrarUnaCripto(String simbolo) {
+
+		for (Criptomoneda cripto : this.criptomonedas) {
+			if (cripto.getSimbolo().equals(simbolo)) {
+
+				System.out.println("Criptomoneda: ");
+				System.out.println(cripto);
+
+				for (Mercado mercado : this.mercados) {
+					if (mercado.getCripto().getSimbolo().equals(simbolo)) {
+						System.out.println("Mercado: ");
+						System.out.println(mercado);
+					}
+				}
+			}
+		}
+	}
+
+	public synchronized void comprarCripto(String simbolo, double monto) throws IOException {
+		for (Mercado mercado : this.mercados) {
+			if (mercado.getCripto().getSimbolo().equals(simbolo)) {
+
+				mercado.modificarVolumenVariacionCapacidad(monto);
+
+				for (Criptomoneda cripto : this.criptomonedas) {
+					if (cripto.getSimbolo().equals(simbolo)) {
+
+						if (cripto.getCompras() > 1000) {
+
+							double nuevoPrecio = cripto.getPrecioDolar() * 1.10;
+							cripto.setPrecioDolar(nuevoPrecio);
+							break;
+						}
+						break;
+					}
+				}
+				actualizarArchivoCriptomonedas();
+				actualizarArchivoMercados();
+				return;
+			}
+		}
 	}
 
 	private synchronized void actualizarArchivoCriptomonedas() throws IOException {
@@ -114,8 +161,7 @@ public class GestorCripto {
 
 		PrintWriter printWriter = new PrintWriter(fileWriter);
 
-		printWriter.println("Simbolo" + "|" + "Capacidad" + "|" + "Volumen24h" + "|" + "VolumenTotal" + "|"
-				+ "Variacion24h" + "|" + "Variacion7d");
+		printWriter.println("Simbolo" + "|" + "Capacidad" + "|" + "Volumen24h" + "|" + "Variacion7d");
 
 		for (Mercado mercado : this.mercados) {
 			printWriter.println(mercado.getCripto().getSimbolo() + "|" + mercado.getCapacidad() + "|"

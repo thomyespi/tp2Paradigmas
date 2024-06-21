@@ -49,6 +49,43 @@ public class GestorUsuarios {
 		actualizarArchivoUsuarios();
 	}
 
+	public void actualizarSaldoUsuario(String usuario, double monto) throws IOException {
+    	for(Usuario user:this.usuarios) {
+    		if(user.getNombre().equals(usuario)) {
+    			 if (user instanceof Trader){
+    				 Trader trader = (Trader) user; 
+    				 trader.restarSaldo(monto);
+    				 break;
+    			 }
+    		}
+    	}
+        
+        actualizarArchivoUsuarios();
+    }
+
+	public boolean validarSaldoUsuario(String usuario, double monto) {
+		for (Usuario user : this.usuarios) {
+			if (user.getNombre().equals(usuario)) {
+				if (user instanceof Trader) {
+					Trader trader = (Trader) user;
+					return trader.puedeComprar(monto);
+				} else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void registrarCompra(String usuario, String simbolo, double cantidad) throws IOException {
+		String archivoHistorico = "archivos/out/" + usuario + "_historico.out";
+		
+		FileWriter fileWriter = new FileWriter(archivoHistorico, true);
+		PrintWriter printWriter = new PrintWriter(fileWriter);
+		printWriter.println(simbolo + "|" + cantidad);
+		printWriter.close();
+	}
+
 	private synchronized void actualizarArchivoUsuarios() throws IOException {
 
 		FileWriter fileWriter = new FileWriter("archivos/in/Usuarios.in");

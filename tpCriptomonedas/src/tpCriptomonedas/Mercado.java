@@ -36,8 +36,44 @@ public class Mercado {
 		return variacion7d;
 	}
 
-	public void setCripto(Criptomoneda cripto) {
-		this.cripto = cripto;
+	public void setSimboloCripto(String simbolo) {
+		this.cripto.setSimbolo(simbolo);
+	}
+
+	public void modificarVolumenVariacionCapacidad(double monto) {
+		this.volumen24h = aumentarVolumen(this.volumen24h);
+		this.variacion7d = aumentarVariacion(this.variacion7d);
+		restarCapacidad(monto);
+	}
+
+	private String aumentarVolumen(String volumen) {
+		double valor = 0;
+		if (volumen.endsWith("B")) {
+			valor = Double.parseDouble(volumen.replace("B", "")) * 1_000_000_000;
+		} else if (volumen.endsWith("M")) {
+			valor = Double.parseDouble(volumen.replace("M", "")) * 1_000_000;
+		}
+
+		valor *= 1.05;
+
+		if (valor >= 1_000_000_000) {
+			return String.format("%.2fB", valor / 1_000_000_000);
+		} else {
+			return String.format("%.2fM", valor / 1_000_000);
+		}
+	}
+
+	private String aumentarVariacion(String variacion) {
+		double valor = Double.parseDouble(variacion.replace("%", ""));
+		valor *= 1.05;
+		return String.format("%.2f%%", valor);
+	}
+	
+	private void restarCapacidad(double monto) {
+		
+		double valor = Double.parseDouble(this.capacidad);
+		valor = valor - monto;
+		this.capacidad = String.valueOf(valor);
 	}
 
 }

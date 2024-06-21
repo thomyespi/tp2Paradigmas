@@ -40,7 +40,19 @@ public class Trader extends Usuario {
 			throw new IllegalArgumentException("El saldo no puede ser negativo");
 		}
 	}
-
+	
+	public boolean puedeComprar(double monto) {
+		return saldoActual >= monto;
+	}
+	
+	public void restarSaldo(double monto) {
+		if (puedeComprar(monto)) {
+			setSaldoActual(saldoActual - monto);
+		} else {
+			throw new IllegalArgumentException("Saldo insuficiente");
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return "Trader{" + "nombre='" + getNombre() + '\'' + ", numeroCuentaBancaria='" + numeroCuentaBancaria + '\''
