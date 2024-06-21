@@ -74,20 +74,20 @@ public class GestorSistema {
 				this.comprarCriptomonedas(usuario.getNombre());
 				break;
 			case 2:
-				// this.mostrarMercados();
-				// break;
+				 this.venderCriptomonedas(usuario.getNombre());
+				 break;
 			case 3:
 				this.mostrarUnaCripto();
 				break;
 			case 4:
-				// this.modificarNombreCripto();
-				// break;
+				 this.recomendarCripto();
+				 break;
 			case 5:
 				this.mostrarMercados();
-				 break;
+				break;
 			case 6:
-				// this.eliminarCripto();
-				// break;
+				this.visualizarHistorico(usuario.getNombre());
+				break;
 			case 0:
 				System.out.println("Programa terminado");
 				break;
@@ -118,9 +118,9 @@ public class GestorSistema {
 
 		System.out.println("\nEsta seguro que quiere realizar la compra? (S/N)");
 		String respuesta = scanner.nextLine().toUpperCase();
-		
+
 		if (respuesta.equals("S")) {
-			
+
 			if (!this.gestorUsuarios.validarSaldoUsuario(usuario, monto)) {
 				System.out.println("Saldo insuficiente. Ingrese el dinero faltante en su cuenta bancaria.");
 				return;
@@ -137,6 +137,55 @@ public class GestorSistema {
 
 		} else
 			return;
+
+	}
+	
+	private void venderCriptomonedas(String usuario) {
+		
+	}
+	
+	private void recomendarCripto() {
+		
+		System.out.println("================= [4] RECOMENDAR CRIPTO ================\n");
+		
+		Mercado mercado=null;
+		
+		try {
+			mercado = this.gestor.recomendarCompra();
+			
+			System.out.println("Luego de realizar una evaluacion estadistica se indica que: \n");
+			System.out.println("La Cripto recomendada es:" + mercado);
+			
+		} catch (IOException e) {
+			System.out.println("Ocurrio un error");
+			e.printStackTrace();
+		}
+	
+		
+	}
+
+	private void visualizarHistorico(String usuario) {
+
+		System.out.println("================= [6] VISUALIZAR HISTORICO ================\n");
+
+		int opcion;
+
+			System.out.println("\nSeleccione el criterio de ordenamiento:");
+			System.out.println("1. Alfabéticamente por símbolo");
+			System.out.println("2. Por cantidad en modo descendente");
+
+			opcion = Integer.parseInt(scanner.nextLine());
+			
+			if(opcion>2 || opcion <1) {
+				return;
+			}
+			
+			try {
+				this.gestorUsuarios.consultarHistorico(usuario, opcion);
+			} catch (IOException e) {
+				System.out.println("Ocurrio un error");
+				e.printStackTrace();
+			}
 
 	}
 

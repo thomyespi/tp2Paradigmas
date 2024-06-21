@@ -142,6 +142,38 @@ public class GestorCripto {
 		}
 	}
 
+	public Mercado recomendarCompra() throws IOException {
+		
+		Criptomoneda criptoMayorCotizacion = null;
+		Mercado aDevolver = null;
+		double maxPrecio=0;
+		
+		for (Criptomoneda cripto : criptomonedas) {
+		    if (cripto.getPrecioDolar() > maxPrecio) {
+		        maxPrecio = cripto.getPrecioDolar();
+		        criptoMayorCotizacion = cripto;
+		    }
+		}
+
+		double mayorPorcentaje = 0;
+
+		for (Mercado mercado : mercados) {
+			if (mercado.getCripto().getSimbolo().equals(criptoMayorCotizacion.getSimbolo())) {
+				
+				double cantidadDisponible = Double.parseDouble(mercado.getCapacidad());
+				double precioDolar = criptoMayorCotizacion.getPrecioDolar();
+				double porcentaje = (cantidadDisponible / precioDolar) * 100;
+
+				if (porcentaje > mayorPorcentaje) {
+					mayorPorcentaje = porcentaje;
+					aDevolver = mercado;
+				}
+			}
+		}
+
+		return aDevolver;
+	}
+
 	private synchronized void actualizarArchivoCriptomonedas() throws IOException {
 		FileWriter fileWriter = new FileWriter("archivos/in/Criptomonedas.in");
 

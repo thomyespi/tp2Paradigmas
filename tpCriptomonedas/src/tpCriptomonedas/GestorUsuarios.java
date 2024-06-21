@@ -1,9 +1,13 @@
 package tpCriptomonedas;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class GestorUsuarios {
@@ -85,6 +89,55 @@ public class GestorUsuarios {
 		printWriter.println(simbolo + "|" + cantidad);
 		printWriter.close();
 	}
+	
+    public void consultarHistorico(String usuario, int ordenamiento) throws IOException {
+        String archivoHistorico = "archivos/out/" + usuario + "_historico.out";
+        
+        List<Transaccion> transacciones = leerArchivoHistorico(archivoHistorico);
+
+        if (ordenamiento == 1) {
+            transacciones.sort(Comparator.comparing(Transaccion::getSimbolo));
+        } else if (ordenamiento == 2) {
+            transacciones.sort(Comparator.comparing(Transaccion::getCantidad).reversed());
+        } else {
+            System.out.println("Opción no válida.");
+            return;
+        }
+
+        for (Transaccion transaccion : transacciones) {
+            System.out.println(transaccion);
+        }
+    }
+
+    private List<Transaccion> leerArchivoHistorico(String archivoHistorico) throws IOException {
+        List<Transaccion> transacciones = new ArrayList<>();
+        File file = new File(archivoHistorico);
+        Scanner scanner = null;
+
+        try {
+            scanner = new Scanner(file);
+            scanner.useLocale(Locale.ENGLISH);
+
+            while (scanner.hasNextLine()) {
+                String linea = scanner.nextLine();
+                String[] partes = linea.split("\\|");
+
+                String simbolo = partes[0];
+                double cantidad = Double.parseDouble(partes[1]);
+
+                Transaccion transaccion = new Transaccion(simbolo, cantidad);
+                transacciones.add(transaccion);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (scanner != null) {
+                scanner.close();
+            }
+        }
+        return transacciones;
+    }
 
 	private synchronized void actualizarArchivoUsuarios() throws IOException {
 
