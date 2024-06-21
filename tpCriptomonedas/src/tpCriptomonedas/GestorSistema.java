@@ -74,14 +74,14 @@ public class GestorSistema {
 				this.comprarCriptomonedas(usuario.getNombre());
 				break;
 			case 2:
-				 this.venderCriptomonedas(usuario.getNombre());
-				 break;
+				this.venderCriptomonedas(usuario.getNombre());
+				break;
 			case 3:
 				this.mostrarUnaCripto();
 				break;
 			case 4:
-				 this.recomendarCripto();
-				 break;
+				this.recomendarCripto();
+				break;
 			case 5:
 				this.mostrarMercados();
 				break;
@@ -139,29 +139,72 @@ public class GestorSistema {
 			return;
 
 	}
-	
+
 	private void venderCriptomonedas(String usuario) {
-		
+
+		System.out.println("================= [2] VENDER CRIPTO ================\n");
+
+		System.out.println("Ingresa el Simbolo de la Cripto a vender: ");
+		String simbolo = scanner.nextLine();
+
+		if (!gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
+			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' NO existe!\n");
+			return;
+		}
+
+		double cantidadMaxima = gestorUsuarios.obtenerCantidadMaxima(usuario, simbolo.toUpperCase());
+
+		if (cantidadMaxima == 0) {
+			System.out.println("No tienes suficientes criptomonedas para vender.\n");
+			return;
+		}
+
+		System.out.println("La cantidad máxima que puedes vender es: " + cantidadMaxima);
+		System.out.println("\nIngresa la cantidad a vender: ");
+		double cantidad = Double.parseDouble(scanner.nextLine());
+
+		if (cantidad > cantidadMaxima) {
+			System.out.println(
+					"Cantidad ingresada superior a la cantidad máxima que puedes vender. Operación cancelada.\n");
+			return;
+		}
+
+		System.out.println("\nEstá seguro que quiere realizar la venta? (S/N)");
+		String respuesta = scanner.nextLine().toUpperCase();
+
+		if (respuesta.equals("S")) {
+			try {
+				gestor.venderCripto(simbolo.toUpperCase(), cantidad);
+				gestorUsuarios.registrarVenta(usuario, simbolo.toUpperCase(), cantidad);
+			} catch (Exception e) {
+				System.out.println("Ocurrió un error durante la venta.");
+				e.printStackTrace();
+			}
+
+			System.out.println("\nLa venta fue realizada con éxito");
+		} else {
+			System.out.println("Operación cancelada.");
+		}
+
 	}
-	
+
 	private void recomendarCripto() {
-		
+
 		System.out.println("================= [4] RECOMENDAR CRIPTO ================\n");
-		
-		Mercado mercado=null;
-		
+
+		Mercado mercado = null;
+
 		try {
 			mercado = this.gestor.recomendarCompra();
-			
+
 			System.out.println("Luego de realizar una evaluacion estadistica se indica que: \n");
 			System.out.println("La Cripto recomendada es:" + mercado);
-			
+
 		} catch (IOException e) {
 			System.out.println("Ocurrio un error");
 			e.printStackTrace();
 		}
-	
-		
+
 	}
 
 	private void visualizarHistorico(String usuario) {
@@ -170,22 +213,22 @@ public class GestorSistema {
 
 		int opcion;
 
-			System.out.println("\nSeleccione el criterio de ordenamiento:");
-			System.out.println("1. Alfabéticamente por símbolo");
-			System.out.println("2. Por cantidad en modo descendente");
+		System.out.println("\nSeleccione el criterio de ordenamiento:");
+		System.out.println("1. Alfabéticamente por símbolo");
+		System.out.println("2. Por cantidad en modo descendente");
 
-			opcion = Integer.parseInt(scanner.nextLine());
-			
-			if(opcion>2 || opcion <1) {
-				return;
-			}
-			
-			try {
-				this.gestorUsuarios.consultarHistorico(usuario, opcion);
-			} catch (IOException e) {
-				System.out.println("Ocurrio un error");
-				e.printStackTrace();
-			}
+		opcion = Integer.parseInt(scanner.nextLine());
+
+		if (opcion > 2 || opcion < 1) {
+			return;
+		}
+
+		try {
+			this.gestorUsuarios.consultarHistorico(usuario, opcion);
+		} catch (IOException e) {
+			System.out.println("Ocurrio un error");
+			e.printStackTrace();
+		}
 
 	}
 

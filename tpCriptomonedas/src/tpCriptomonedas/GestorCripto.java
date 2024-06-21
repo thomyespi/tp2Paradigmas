@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Locale;
 
 public class GestorCripto {
 
@@ -140,6 +141,25 @@ public class GestorCripto {
 				return;
 			}
 		}
+	}
+	
+	public synchronized void venderCripto(String simbolo, double cantidad) throws IOException {
+	    for (Mercado mercado : this.mercados) {
+	        if (mercado.getCripto().getSimbolo().equals(simbolo)) {
+
+	            double nuevaCapacidad = Double.parseDouble(mercado.getCapacidad()) + cantidad;
+	            mercado.setCapacidad(String.valueOf(nuevaCapacidad));
+
+	            double nuevoVolumen24h = Double.parseDouble(mercado.getVolumen24h()) * 0.93;
+	            mercado.setVolumen24h(String.valueOf(nuevoVolumen24h));
+
+	            double nuevaVariacion7d = Double.parseDouble(mercado.getVariacion7d().replace("%", "")) * 0.93;
+	            mercado.setVariacion7d(String.format(Locale.US, "%.2f%%", nuevaVariacion7d));
+
+	            actualizarArchivoMercados();
+	            return;
+	        }
+	    }
 	}
 
 	public Mercado recomendarCompra() throws IOException {

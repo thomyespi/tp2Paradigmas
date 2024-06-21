@@ -89,6 +89,32 @@ public class GestorUsuarios {
 		printWriter.println(simbolo + "|" + cantidad);
 		printWriter.close();
 	}
+
+
+	public void registrarVenta(String nombreUsuario, String simbolo, double cantidad) throws IOException {
+	    for (Usuario user : usuarios) {
+	        if (user.getNombre().equals(nombreUsuario)) {
+	            if (user instanceof Trader) {
+	//                Trader trader = (Trader) user;
+//	                trader.restarCantidadCripto(simbolo, cantidad);
+	                actualizarArchivoUsuarios();
+	                return;
+	            }
+	        }
+	    }
+	}
+	
+	public double obtenerCantidadMaxima(String nombreUsuario, String simbolo) {
+	    for (Usuario user : usuarios) {
+	        if (user.getNombre().equals(nombreUsuario)) {
+	            if (user instanceof Trader) {
+	                Trader trader = (Trader) user;
+	                return trader.getCantidadCripto(simbolo);
+	            }
+	        }
+	    }
+	    return 0;
+	}
 	
     public void consultarHistorico(String usuario, int ordenamiento) throws IOException {
         String archivoHistorico = "archivos/out/" + usuario + "_historico.out";

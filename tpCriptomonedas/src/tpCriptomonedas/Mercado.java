@@ -39,6 +39,18 @@ public class Mercado {
 	public void setSimboloCripto(String simbolo) {
 		this.cripto.setSimbolo(simbolo);
 	}
+	
+	public void setCapacidad(String capacidad) {
+		this.capacidad = capacidad;
+	}
+	
+	public void setVolumen24h(String vol) {
+		this.volumen24h = vol;
+	}
+	
+	public void setVariacion7d(String var) {
+		this.variacion7d = var;
+	}
 
 	public void modificarVolumenVariacionCapacidad(double monto) {
 		this.volumen24h = aumentarVolumen(this.volumen24h);
