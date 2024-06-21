@@ -1,90 +1,197 @@
 package tpCriptomonedas;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Trader extends Usuario {
 
-    private String numeroCuentaBancaria;
-    private String nombreBanco;
-    private double saldoActual;
-    private List<Criptomoneda> historico;
+	private String numeroCuentaBancaria;
+	private String nombreBanco;
+	private double saldoActual;
+	private List<Transaccion> historico;
 
-    public Trader(String nombre, String numeroCuentaBancaria, String nombreBanco, double saldoActual) {
-        super(nombre);
-        this.numeroCuentaBancaria = numeroCuentaBancaria;
-        this.nombreBanco = nombreBanco;
-        this.saldoActual = saldoActual;
-        this.historico = new ArrayList<>();
-    }
+	public Trader(String nombre, String numeroCuentaBancaria, String nombreBanco, double saldoActual) {
+		super(nombre);
+		this.numeroCuentaBancaria = numeroCuentaBancaria;
+		this.nombreBanco = nombreBanco;
+		this.saldoActual = saldoActual;
 
-    public String getNumeroCuentaBancaria() {
-        return numeroCuentaBancaria;
-    }
+		List<Transaccion> aux = new ArrayList<>();
 
-    public void setNumeroCuentaBancaria(String numeroCuentaBancaria) {
-        this.numeroCuentaBancaria = numeroCuentaBancaria;
-    }
+		String archivoHistorico = "archivos/out/" + nombre + "_historico.out";
 
-    public String getNombreBanco() {
-        return nombreBanco;
-    }
+		File archivo = new File(archivoHistorico);
+		if (archivo.exists() && archivo.isFile()) {
+			try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+				String linea;
+				while ((linea = br.readLine()) != null) {
+					if (esValida(linea)) {
+						String[] partes = linea.split("\\|");
+						String simbolo = partes[0];
+						double cantidad = Double.parseDouble(partes[1]);
+						Transaccion trx = new Transaccion(simbolo.toUpperCase(), cantidad);
+						aux.add(trx);
+					}
+				}
+				this.historico = aux;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			this.historico = new ArrayList<>();
+		}
 
-    public void setNombreBanco(String nombreBanco) {
-        this.nombreBanco = nombreBanco;
-    }
+	}
 
-    public double getSaldoActual() {
-        return saldoActual;
-    }
+	private boolean esValida(String linea) {
 
-    public void setSaldoActual(double nuevoSaldo) {
-        if (nuevoSaldo >= 0) {
-            this.saldoActual = nuevoSaldo;
-        } else {
-            throw new IllegalArgumentException("El saldo no puede ser negativo");
-        }
-    }
+		return linea != null && !linea.trim().isEmpty();
+	}
 
-    public boolean puedeComprar(double monto) {
-        return saldoActual >= monto;
-    }
+	public String getNumeroCuentaBancaria() {
+		return numeroCuentaBancaria;
+	}
 
-    public void restarSaldo(double monto) {
-        if (puedeComprar(monto)) {
-            setSaldoActual(saldoActual - monto);
-        } else {
-            throw new IllegalArgumentException("Saldo insuficiente");
-        }
-    }
+	public void setNumeroCuentaBancaria(String numeroCuentaBancaria) {
+		this.numeroCuentaBancaria = numeroCuentaBancaria;
+	}
 
-  
-    public double getCantidadCripto(String simbolo) {
-        for (Criptomoneda cripto : historico) {
-            if (cripto.getSimbolo().equals(simbolo)) {
-                return cripto.getCompras();
-            }
-        }
-        return 0;
-    }
-//
-//    public void restarCantidadCripto(String simbolo, double cantidad) {
-//        for (Criptomoneda cripto : historico) {
-//            if (cripto.getSimbolo().equals(simbolo)) {
-//                double nuevaCantidad = cripto.getCompras() - cantidad;
-//                cripto.setCompras(nuevaCantidad);
-//                return;
-//            }
-//        }
-//    }
+	public String getNombreBanco() {
+		return nombreBanco;
+	}
 
-    public void agregarCriptomoneda(Criptomoneda cripto) {
-        historico.add(cripto);
-    }
+	public void setNombreBanco(String nombreBanco) {
+		this.nombreBanco = nombreBanco;
+	}
 
-    @Override
-    public String toString() {
-        return "Trader{" + "nombre='" + getNombre() + '\'' + ", numeroCuentaBancaria='" + numeroCuentaBancaria + '\''
-                + ", nombreBanco='" + nombreBanco + '\'' + ", saldoActual=" + saldoActual + '}';
-    }
+	public double getSaldoActual() {
+		return saldoActual;
+	}
+
+	public void setSaldoActual(double nuevoSaldo) {
+		if (nuevoSaldo >= 0) {
+			this.saldoActual = nuevoSaldo;
+		} else {
+			throw new IllegalArgumentException("El saldo no puede ser negativo");
+		}
+	}
+
+	public boolean puedeComprar(double monto) {
+		return saldoActual >= monto;
+	}
+
+	public void restarSaldo(double monto) {
+		if (puedeComprar(monto)) {
+			setSaldoActual(saldoActual - monto);
+		} else {
+			throw new IllegalArgumentException("Saldo insuficiente");
+		}
+	}
+
+	public void sumarSaldo(double monto) {
+		this.saldoActual += monto;
+	}
+
+	public double getCantidadCripto(String simbolo) {
+		for (Transaccion cripto : historico) {
+			if (cripto.getSimbolo().equals(simbolo)) {
+				return cripto.getCantidad();
+			}
+		}
+		return 0;
+	}
+
+	public boolean buscarSimboloHistorico(String simbolo) {
+
+		for (Transaccion trx : historico) {
+			if (trx.getSimbolo().equals(simbolo)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void actualizarHistorico(String simbolo, double cantidad, String type) {
+
+		for (Transaccion trx : historico) {
+
+			if (trx.getSimbolo().equals(simbolo)) {
+
+				if (type.equals("compra")) {
+					double cant = trx.getCantidad() + cantidad;
+					trx.setCantidad(cant);
+				} else {
+					double cant = trx.getCantidad() - cantidad;
+					trx.setCantidad(cant);
+				}
+
+				try {
+					actualizarArchivoSalida(this.getNombre());
+				} catch (IOException e) {
+					System.out.println("Error al actualizar el archivo");
+					e.printStackTrace();
+				}
+				return;
+			}
+
+		}
+		Transaccion tran = new Transaccion(simbolo, cantidad);
+		historico.add(tran);
+
+		try {
+			actualizarArchivoSalida(this.getNombre());
+		} catch (IOException e) {
+			System.out.println("Error al actualizar el archivo");
+			e.printStackTrace();
+		}
+	}
+
+	private void actualizarArchivoSalida(String usuario) throws IOException {
+
+		String archivoHistorico = "archivos/out/" + usuario + "_historico.out";
+
+		File archivo = new File(archivoHistorico);
+
+		if (archivo.exists()) {
+			archivo.delete();
+		}
+
+		FileWriter fileWriter = new FileWriter(archivoHistorico, true);
+		PrintWriter printWriter = new PrintWriter(fileWriter);
+
+		for (Transaccion trx : historico) {
+			printWriter.println(trx.getSimbolo() + "|" + trx.getCantidad());
+		}
+		printWriter.close();
+
+	}
+
+	public void mostrarHistorico(int ordenamiento) {
+		 if (ordenamiento == 1) {
+	            historico.sort(Comparator.comparing(Transaccion::getSimbolo));
+	        } else if (ordenamiento == 2) {
+	            historico.sort(Comparator.comparing(Transaccion::getCantidad).reversed());
+	        } else {
+	            System.out.println("Opción no válida.");
+	            return;
+	        }
+
+	        for (Transaccion transaccion : historico) {
+	            System.out.println(transaccion);
+	        }
+	}
+
+	@Override
+	public String toString() {
+		return "Trader{" + "nombre='" + getNombre() + '\'' + ", numeroCuentaBancaria='" + numeroCuentaBancaria + '\''
+				+ ", nombreBanco='" + nombreBanco + '\'' + ", saldoActual=" + saldoActual + '}';
+	}
+
 }

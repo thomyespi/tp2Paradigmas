@@ -74,7 +74,7 @@ public class GestorSistema {
 				this.comprarCriptomonedas(usuario.getNombre());
 				break;
 			case 2:
-		//		this.venderCriptomonedas(usuario.getNombre());
+				this.venderCriptomonedas(usuario.getNombre());
 				break;
 			case 3:
 				this.mostrarUnaCripto();
@@ -126,9 +126,9 @@ public class GestorSistema {
 				return;
 			}
 			try {
-				this.gestor.comprarCripto(simbolo, monto);
-				this.gestorUsuarios.registrarCompra(usuario, simbolo, monto);
-				this.gestorUsuarios.actualizarSaldoUsuario(usuario, monto);
+				this.gestorUsuarios.actualizarSaldoUsuario(usuario, monto,"compra");
+				this.gestor.comprarCripto(simbolo.toUpperCase(), monto);
+				this.gestorUsuarios.registrarCompra(usuario, simbolo.toUpperCase(), monto);	
 			} catch (Exception e) {
 				System.out.println("Ocurrio un error");
 			}
@@ -148,7 +148,12 @@ public class GestorSistema {
 		String simbolo = scanner.nextLine();
 
 		if (!gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
-			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' NO existe!\n");
+			System.out.println("La Criptomoneda con el símbolo '" + simbolo.toUpperCase() + "' NO existe!\n");
+			return;
+		}
+		
+		if(!gestorUsuarios.validarExistenciaCriptoHistorico(usuario, simbolo.toUpperCase())) {
+			System.out.println("No posee la Criptomoneda con el símbolo  " + simbolo+"\n");
 			return;
 		}
 
@@ -174,14 +179,15 @@ public class GestorSistema {
 
 		if (respuesta.equals("S")) {
 			try {
-				gestor.venderCripto(simbolo.toUpperCase(), cantidad);
-				gestorUsuarios.registrarVenta(usuario, simbolo.toUpperCase(), cantidad);
+				this.gestorUsuarios.actualizarSaldoUsuario(usuario, cantidad,"venta");
+				this.gestor.venderCripto(simbolo.toUpperCase(), cantidad);
+				this.gestorUsuarios.registrarVenta(usuario, simbolo.toUpperCase(), cantidad);
+				System.out.println("\nLa venta fue realizada con éxito");
 			} catch (Exception e) {
 				System.out.println("Ocurrió un error durante la venta.");
 				e.printStackTrace();
 			}
 
-			System.out.println("\nLa venta fue realizada con éxito");
 		} else {
 			System.out.println("Operación cancelada.");
 		}

@@ -16,8 +16,17 @@ public class Transaccion {
     public double getCantidad() {
         return cantidad;
     }
+    
+    
+    public void setSimbolo(String simbolo) {
+		this.simbolo = simbolo;
+	}
 
-    @Override
+	public void setCantidad(double cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	@Override
     public String toString() {
         return simbolo + "|" + cantidad;
     }

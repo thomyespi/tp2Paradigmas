@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Locale;
 
 public class GestorCripto {
 
@@ -122,7 +121,7 @@ public class GestorCripto {
 		for (Mercado mercado : this.mercados) {
 			if (mercado.getCripto().getSimbolo().equals(simbolo)) {
 
-				mercado.modificarVolumenVariacionCapacidad(monto);
+				mercado.modificarVolumenVariacionCapacidadCompra(monto);
 
 				for (Criptomoneda cripto : this.criptomonedas) {
 					if (cripto.getSimbolo().equals(simbolo)) {
@@ -138,6 +137,7 @@ public class GestorCripto {
 				}
 				actualizarArchivoCriptomonedas();
 				actualizarArchivoMercados();
+				
 				return;
 			}
 		}
@@ -147,15 +147,7 @@ public class GestorCripto {
 	    for (Mercado mercado : this.mercados) {
 	        if (mercado.getCripto().getSimbolo().equals(simbolo)) {
 
-	            double nuevaCapacidad = Double.parseDouble(mercado.getCapacidad()) + cantidad;
-	            mercado.setCapacidad(String.valueOf(nuevaCapacidad));
-
-	            double nuevoVolumen24h = Double.parseDouble(mercado.getVolumen24h()) * 0.93;
-	            mercado.setVolumen24h(String.valueOf(nuevoVolumen24h));
-
-	            double nuevaVariacion7d = Double.parseDouble(mercado.getVariacion7d().replace("%", "")) * 0.93;
-	            mercado.setVariacion7d(String.format(Locale.US, "%.2f%%", nuevaVariacion7d));
-
+	        	mercado.modificarVolumenVariacionCapacidadVenta(cantidad);
 	            actualizarArchivoMercados();
 	            return;
 	        }

@@ -52,10 +52,16 @@ public class Mercado {
 		this.variacion7d = var;
 	}
 
-	public void modificarVolumenVariacionCapacidad(double monto) {
+	public void modificarVolumenVariacionCapacidadCompra(double monto) {
 		this.volumen24h = aumentarVolumen(this.volumen24h);
 		this.variacion7d = aumentarVariacion(this.variacion7d);
 		restarCapacidad(monto);
+	}
+	
+	public void modificarVolumenVariacionCapacidadVenta(double monto) {
+		this.volumen24h = disminuirVolumen(this.volumen24h);
+		this.variacion7d = disminuirVariacion(this.variacion7d);
+		aumentarCapacidad(monto);
 	}
 
 	private String aumentarVolumen(String volumen) {
@@ -74,6 +80,23 @@ public class Mercado {
 			return String.format("%.2fM", valor / 1_000_000);
 		}
 	}
+	
+	private String disminuirVolumen(String volumen) {
+		double valor = 0;
+		if (volumen.endsWith("B")) {
+			valor = Double.parseDouble(volumen.replace("B", "")) * 1_000_000_000;
+		} else if (volumen.endsWith("M")) {
+			valor = Double.parseDouble(volumen.replace("M", "")) * 1_000_000;
+		}
+
+		valor *= 0.93;
+
+		if (valor >= 1_000_000_000) {
+			return String.format("%.2fB", valor / 1_000_000_000);
+		} else {
+			return String.format("%.2fM", valor / 1_000_000);
+		}
+	}
 
 	private String aumentarVariacion(String variacion) {
 		double valor = Double.parseDouble(variacion.replace("%", ""));
@@ -81,10 +104,23 @@ public class Mercado {
 		return String.format("%.2f%%", valor);
 	}
 	
+	private String disminuirVariacion(String variacion) {
+		double valor = Double.parseDouble(variacion.replace("%", ""));
+		valor *= 0.93;
+		return String.format("%.2f%%", valor);
+	}
+	
 	private void restarCapacidad(double monto) {
 		
 		double valor = Double.parseDouble(this.capacidad);
 		valor = valor - monto;
+		this.capacidad = String.valueOf(valor);
+	}
+	
+	private void aumentarCapacidad(double monto) {
+		
+		double valor = Double.parseDouble(this.capacidad);
+		valor = valor + monto;
 		this.capacidad = String.valueOf(valor);
 	}
 
