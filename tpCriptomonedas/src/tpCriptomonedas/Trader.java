@@ -40,12 +40,12 @@ public class Trader extends Usuario {
 						aux.add(trx);
 					}
 				}
-				this.historico = aux;
+				this.setHistorico(aux);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else {
-			this.historico = new ArrayList<>();
+			this.setHistorico(new ArrayList<>());
 		}
 
 	}
@@ -100,7 +100,7 @@ public class Trader extends Usuario {
 	}
 
 	public double getCantidadCripto(String simbolo) {
-		for (Transaccion cripto : historico) {
+		for (Transaccion cripto : getHistorico()) {
 			if (cripto.getSimbolo().equals(simbolo)) {
 				return cripto.getCantidad();
 			}
@@ -110,7 +110,7 @@ public class Trader extends Usuario {
 
 	public boolean buscarSimboloHistorico(String simbolo) {
 
-		for (Transaccion trx : historico) {
+		for (Transaccion trx : getHistorico()) {
 			if (trx.getSimbolo().equals(simbolo)) {
 				return true;
 			}
@@ -120,7 +120,7 @@ public class Trader extends Usuario {
 
 	public void actualizarHistorico(String simbolo, double cantidad, String type) {
 
-		for (Transaccion trx : historico) {
+		for (Transaccion trx : getHistorico()) {
 
 			if (trx.getSimbolo().equals(simbolo)) {
 
@@ -143,7 +143,7 @@ public class Trader extends Usuario {
 
 		}
 		Transaccion tran = new Transaccion(simbolo, cantidad);
-		historico.add(tran);
+		getHistorico().add(tran);
 
 		try {
 			actualizarArchivoSalida(this.getNombre());
@@ -166,7 +166,7 @@ public class Trader extends Usuario {
 		FileWriter fileWriter = new FileWriter(archivoHistorico, true);
 		PrintWriter printWriter = new PrintWriter(fileWriter);
 
-		for (Transaccion trx : historico) {
+		for (Transaccion trx : getHistorico()) {
 			printWriter.println(trx.getSimbolo() + "|" + trx.getCantidad());
 		}
 		printWriter.close();
@@ -175,15 +175,15 @@ public class Trader extends Usuario {
 
 	public void mostrarHistorico(int ordenamiento) {
 		 if (ordenamiento == 1) {
-	            historico.sort(Comparator.comparing(Transaccion::getSimbolo));
+	            getHistorico().sort(Comparator.comparing(Transaccion::getSimbolo));
 	        } else if (ordenamiento == 2) {
-	            historico.sort(Comparator.comparing(Transaccion::getCantidad).reversed());
+	            getHistorico().sort(Comparator.comparing(Transaccion::getCantidad).reversed());
 	        } else {
 	            System.out.println("Opción no válida.");
 	            return;
 	        }
 
-	        for (Transaccion transaccion : historico) {
+	        for (Transaccion transaccion : getHistorico()) {
 	            System.out.println(transaccion);
 	        }
 	}
@@ -192,6 +192,14 @@ public class Trader extends Usuario {
 	public String toString() {
 		return "Trader{" + "nombre='" + getNombre() + '\'' + ", numeroCuentaBancaria='" + numeroCuentaBancaria + '\''
 				+ ", nombreBanco='" + nombreBanco + '\'' + ", saldoActual=" + saldoActual + '}';
+	}
+
+	public List<Transaccion> getHistorico() {
+		return historico;
+	}
+
+	public void setHistorico(List<Transaccion> historico) {
+		this.historico = historico;
 	}
 
 }

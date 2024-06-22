@@ -33,7 +33,7 @@ public class Criptomoneda {
 		return precioDolar;
 	}
 	
-	public double getCompras() {
+	public int getCompras() {
 		return this.cantCompras;
 	}
 
