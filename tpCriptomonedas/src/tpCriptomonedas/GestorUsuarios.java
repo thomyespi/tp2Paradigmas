@@ -138,6 +138,21 @@ public class GestorUsuarios {
 			}
 		}
 	}
+	
+	public void obtenerDatosCuenta(String nombreUsuario) {
+		
+		for (Usuario user : usuarios) {
+			if (user.getNombre().equals(nombreUsuario)) {
+				if (user instanceof Trader) {
+					Trader trader = (Trader) user;
+					System.out.println("Nombre Banco: " + trader.getNombreBanco());
+					System.out.println("Numero Cuenta: " + trader.getNumeroCuentaBancaria());
+					System.out.println("Saldo Cuenta: " + trader.getSaldoActual());
+				}
+			}
+		}
+		
+	}
 
 	private synchronized void actualizarArchivoUsuarios() throws IOException {
 

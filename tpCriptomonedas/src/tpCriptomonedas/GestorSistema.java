@@ -62,7 +62,8 @@ public class GestorSistema {
 			System.out.println("[4] Recomendar Criptomonedas");
 			System.out.println("[5] Consultar estado actual del mercado");
 			System.out.println("[6] Visualizar archivo de transacciones (histórico)");
-			System.out.println("[7] Ingresar con otro usuario");
+			System.out.println("[7] Obtener datos de cuenta");
+			System.out.println("[8] Ingresar con otro usuario");
 			System.out.println("[0] Salir");
 			System.out.println("\nSeleccionar Opcion: ");
 			try {
@@ -91,6 +92,9 @@ public class GestorSistema {
 				this.visualizarHistorico(usuario.getNombre());
 				break;
 			case 7:
+				this.obtenerDatosCuenta(usuario.getNombre());
+				break;
+			case 8:
 				this.ingresarConOtroUsuario();;
 				break;
 			case 0:
@@ -241,6 +245,12 @@ public class GestorSistema {
 			e.printStackTrace();
 		}
 
+	}
+	
+	private void obtenerDatosCuenta(String id) {
+		
+		System.out.println("================= [7] OBTENER DATOS CUENTA ================\n");
+		this.gestorUsuarios.obtenerDatosCuenta(id);
 	}
 
 	private void mostrarMenuAdmin() {
