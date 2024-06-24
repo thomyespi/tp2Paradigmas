@@ -113,8 +113,12 @@ public class Mercado {
 	private void restarCapacidad(double monto) {
 
 		double valor = Double.parseDouble(this.capacidad);
-		valor = valor - monto;
-		this.capacidad = String.valueOf(valor);
+		if(valor >= monto) {
+			valor = valor - monto;
+			this.capacidad = String.valueOf(valor);
+		}else {
+			System.out.println("No hay capacidad suficiente para comprar esta moneda");
+		}
 	}
 
 	private void aumentarCapacidad(double monto) {
