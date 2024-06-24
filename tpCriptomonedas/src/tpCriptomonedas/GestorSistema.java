@@ -17,7 +17,8 @@ public class GestorSistema {
 
 	public void iniciarSesion() throws IOException {
 
-		System.out.println("Ingrese su nombre de usuario:");
+		
+		System.out.println("\n\nIngrese su nombre de usuario:");
 		String nombreUsuario = scanner.nextLine();
 		Usuario usuario = gestorUsuarios.buscarUsuario(nombreUsuario);
 
@@ -42,8 +43,8 @@ public class GestorSistema {
 				System.out.println("\n¡Bienvenido, " + nombreUsuario + "!");
 				mostrarMenuTrader(usuario);
 			} else {
-				System.out.println("Muchas gracias.");
-				System.exit(0);
+				System.out.println("Muchas gracias.");	
+				iniciarSesion();
 			}
 		}
 	}
@@ -61,6 +62,7 @@ public class GestorSistema {
 			System.out.println("[4] Recomendar Criptomonedas");
 			System.out.println("[5] Consultar estado actual del mercado");
 			System.out.println("[6] Visualizar archivo de transacciones (histórico)");
+			System.out.println("[7] Ingresar con otro usuario");
 			System.out.println("[0] Salir");
 			System.out.println("\nSeleccionar Opcion: ");
 			try {
@@ -83,10 +85,13 @@ public class GestorSistema {
 				this.recomendarCripto();
 				break;
 			case 5:
-				this.mostrarMercados();
+				this.mostrarMercados("5");
 				break;
 			case 6:
 				this.visualizarHistorico(usuario.getNombre());
+				break;
+			case 7:
+				this.ingresarConOtroUsuario();;
 				break;
 			case 0:
 				System.out.println("Programa terminado");
@@ -253,6 +258,7 @@ public class GestorSistema {
 			System.out.println("[6] Modificar Simbolo Criptomoneda");
 			System.out.println("[7] Modificar Precio Criptomoneda");
 			System.out.println("[8] Eliminar Criptomoneda");
+			System.out.println("[9] Ingresar con otro usuario");
 			System.out.println("[0] Salir");
 			System.out.println("\nSeleccionar Opcion: ");
 			try {
@@ -266,7 +272,7 @@ public class GestorSistema {
 				this.mostrarCriptomonedas();
 				break;
 			case 2:
-				this.mostrarMercados();
+				this.mostrarMercados("2");
 				break;
 			case 3:
 				this.mostrarUnaCripto();
@@ -286,6 +292,9 @@ public class GestorSistema {
 			case 8:
 				this.eliminarCripto();
 				break;
+			case 9:
+				this.ingresarConOtroUsuario();;
+				break;
 			case 0:
 				System.out.println("Programa terminado");
 				break;
@@ -302,8 +311,8 @@ public class GestorSistema {
 		System.out.println(this.gestor.getCriptomonedas());
 	}
 
-	private void mostrarMercados() {
-		System.out.println("================= [2] MERCADO ================\n");
+	private void mostrarMercados(String numero) {
+		System.out.println("================= ["+numero+"] MERCADO ================\n");
 		System.out.println(this.gestor.getMercados());
 	}
 
@@ -511,5 +520,16 @@ public class GestorSistema {
 				System.out.println("La opcion elegida no es valida!!\n");
 			}
 		} while (opcion != 0);
+	}
+	
+	private void ingresarConOtroUsuario() {
+		
+		try {
+			iniciarSesion();
+		} catch (IOException e) {
+			System.out.println("Error al iniciar sesion");
+			e.printStackTrace();
+		}
+		
 	}
 }

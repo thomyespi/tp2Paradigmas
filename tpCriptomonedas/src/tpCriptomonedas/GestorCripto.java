@@ -166,7 +166,7 @@ public class GestorCripto {
 		        criptoMayorCotizacion = cripto;
 		    }
 		}
-
+	
 		double mayorPorcentaje = 0;
 
 		for (Mercado mercado : mercados) {
