@@ -54,9 +54,9 @@ public class GestorUsuarios {
 			if (user.getNombre().equals(usuario)) {
 				if (user instanceof Trader) {
 					Trader trader = (Trader) user;
-					if(type.equals("compra")) {
+					if (type.equals("compra")) {
 						trader.restarSaldo(monto);
-					}else {
+					} else {
 						trader.sumarSaldo(monto);
 					}
 					break;
@@ -86,17 +86,17 @@ public class GestorUsuarios {
 		for (Usuario user : usuarios) {
 			if (user.getNombre().equals(usuario)) {
 				if (user instanceof Trader) {
-					((Trader) user).actualizarHistorico(simbolo, cantidad,"compra");
+					((Trader) user).actualizarHistorico(simbolo, cantidad, "compra");
 				}
 			}
 		}
 	}
-	
+
 	public void registrarVenta(String nombreUsuario, String simbolo, double cantidad) throws IOException {
 		for (Usuario user : usuarios) {
 			if (user.getNombre().equals(nombreUsuario)) {
 				if (user instanceof Trader) {
-				((Trader) user).actualizarHistorico(simbolo, cantidad,"venta");
+					((Trader) user).actualizarHistorico(simbolo, cantidad, "venta");
 				}
 			}
 		}
@@ -128,7 +128,7 @@ public class GestorUsuarios {
 	}
 
 	public void consultarHistorico(String usuario, int ordenamiento) throws IOException {
-		
+
 		for (Usuario user : usuarios) {
 			if (user.getNombre().equals(usuario)) {
 				if (user instanceof Trader) {
@@ -138,9 +138,9 @@ public class GestorUsuarios {
 			}
 		}
 	}
-	
+
 	public void obtenerDatosCuenta(String nombreUsuario) {
-		
+
 		for (Usuario user : usuarios) {
 			if (user.getNombre().equals(nombreUsuario)) {
 				if (user instanceof Trader) {
@@ -151,7 +151,7 @@ public class GestorUsuarios {
 				}
 			}
 		}
-		
+
 	}
 
 	private synchronized void actualizarArchivoUsuarios() throws IOException {

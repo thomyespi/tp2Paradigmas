@@ -174,18 +174,18 @@ public class Trader extends Usuario {
 	}
 
 	public void mostrarHistorico(int ordenamiento) {
-		 if (ordenamiento == 1) {
-	            getHistorico().sort(Comparator.comparing(Transaccion::getSimbolo));
-	        } else if (ordenamiento == 2) {
-	            getHistorico().sort(Comparator.comparing(Transaccion::getCantidad).reversed());
-	        } else {
-	            System.out.println("Opción no válida.");
-	            return;
-	        }
+		if (ordenamiento == 1) {
+			getHistorico().sort(Comparator.comparing(Transaccion::getSimbolo));
+		} else if (ordenamiento == 2) {
+			getHistorico().sort(Comparator.comparing(Transaccion::getCantidad).reversed());
+		} else {
+			System.out.println("Opción no válida.");
+			return;
+		}
 
-	        for (Transaccion transaccion : getHistorico()) {
-	            System.out.println(transaccion);
-	        }
+		for (Transaccion transaccion : getHistorico()) {
+			System.out.println(transaccion);
+		}
 	}
 
 	@Override

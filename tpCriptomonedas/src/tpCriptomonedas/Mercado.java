@@ -39,15 +39,15 @@ public class Mercado {
 	public void setSimboloCripto(String simbolo) {
 		this.cripto.setSimbolo(simbolo);
 	}
-	
+
 	public void setCapacidad(String capacidad) {
 		this.capacidad = capacidad;
 	}
-	
+
 	public void setVolumen24h(String vol) {
 		this.volumen24h = vol;
 	}
-	
+
 	public void setVariacion7d(String var) {
 		this.variacion7d = var;
 	}
@@ -57,7 +57,7 @@ public class Mercado {
 		this.variacion7d = aumentarVariacion(this.variacion7d);
 		restarCapacidad(monto);
 	}
-	
+
 	public void modificarVolumenVariacionCapacidadVenta(double monto) {
 		this.volumen24h = disminuirVolumen(this.volumen24h);
 		this.variacion7d = disminuirVariacion(this.variacion7d);
@@ -80,7 +80,7 @@ public class Mercado {
 			return String.format("%.2fM", valor / 1_000_000);
 		}
 	}
-	
+
 	private String disminuirVolumen(String volumen) {
 		double valor = 0;
 		if (volumen.endsWith("B")) {
@@ -103,22 +103,22 @@ public class Mercado {
 		valor *= 1.05;
 		return String.format("%.2f%%", valor);
 	}
-	
+
 	private String disminuirVariacion(String variacion) {
 		double valor = Double.parseDouble(variacion.replace("%", ""));
 		valor *= 0.93;
 		return String.format("%.2f%%", valor);
 	}
-	
+
 	private void restarCapacidad(double monto) {
-		
+
 		double valor = Double.parseDouble(this.capacidad);
 		valor = valor - monto;
 		this.capacidad = String.valueOf(valor);
 	}
-	
+
 	private void aumentarCapacidad(double monto) {
-		
+
 		double valor = Double.parseDouble(this.capacidad);
 		valor = valor + monto;
 		this.capacidad = String.valueOf(valor);

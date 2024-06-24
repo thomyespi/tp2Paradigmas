@@ -137,41 +137,41 @@ public class GestorCripto {
 				}
 				actualizarArchivoCriptomonedas();
 				actualizarArchivoMercados();
-				
+
 				return;
 			}
 		}
 	}
-	
-	public synchronized void venderCripto(String simbolo, double cantidad) throws IOException {
-	    for (Mercado mercado : this.mercados) {
-	        if (mercado.getCripto().getSimbolo().equals(simbolo)) {
 
-	        	mercado.modificarVolumenVariacionCapacidadVenta(cantidad);
-	            actualizarArchivoMercados();
-	            return;
-	        }
-	    }
+	public synchronized void venderCripto(String simbolo, double cantidad) throws IOException {
+		for (Mercado mercado : this.mercados) {
+			if (mercado.getCripto().getSimbolo().equals(simbolo)) {
+
+				mercado.modificarVolumenVariacionCapacidadVenta(cantidad);
+				actualizarArchivoMercados();
+				return;
+			}
+		}
 	}
 
 	public Mercado recomendarCompra() throws IOException {
-		
+
 		Criptomoneda criptoMayorCotizacion = null;
 		Mercado aDevolver = null;
-		double maxPrecio=0;
-		
+		double maxPrecio = 0;
+
 		for (Criptomoneda cripto : criptomonedas) {
-		    if (cripto.getPrecioDolar() > maxPrecio) {
-		        maxPrecio = cripto.getPrecioDolar();
-		        criptoMayorCotizacion = cripto;
-		    }
+			if (cripto.getPrecioDolar() > maxPrecio) {
+				maxPrecio = cripto.getPrecioDolar();
+				criptoMayorCotizacion = cripto;
+			}
 		}
-	
+
 		double mayorPorcentaje = 0;
 
 		for (Mercado mercado : mercados) {
 			if (mercado.getCripto().getSimbolo().equals(criptoMayorCotizacion.getSimbolo())) {
-				
+
 				double cantidadDisponible = Double.parseDouble(mercado.getCapacidad());
 				double precioDolar = criptoMayorCotizacion.getPrecioDolar();
 				double porcentaje = (cantidadDisponible / precioDolar) * 100;

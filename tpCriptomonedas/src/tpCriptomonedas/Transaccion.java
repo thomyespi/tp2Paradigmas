@@ -1,24 +1,23 @@
 package tpCriptomonedas;
 
 public class Transaccion {
-    private String simbolo;
-    private double cantidad;
+	private String simbolo;
+	private double cantidad;
 
-    public Transaccion(String simbolo, double cantidad) {
-        this.simbolo = simbolo;
-        this.cantidad = cantidad;
-    }
+	public Transaccion(String simbolo, double cantidad) {
+		this.simbolo = simbolo;
+		this.cantidad = cantidad;
+	}
 
-    public String getSimbolo() {
-        return simbolo;
-    }
+	public String getSimbolo() {
+		return simbolo;
+	}
 
-    public double getCantidad() {
-        return cantidad;
-    }
-    
-    
-    public void setSimbolo(String simbolo) {
+	public double getCantidad() {
+		return cantidad;
+	}
+
+	public void setSimbolo(String simbolo) {
 		this.simbolo = simbolo;
 	}
 
@@ -27,7 +26,7 @@ public class Transaccion {
 	}
 
 	@Override
-    public String toString() {
-        return simbolo + "|" + cantidad;
-    }
+	public String toString() {
+		return simbolo + "|" + cantidad;
+	}
 }

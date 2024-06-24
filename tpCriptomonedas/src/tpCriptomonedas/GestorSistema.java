@@ -17,7 +17,6 @@ public class GestorSistema {
 
 	public void iniciarSesion() throws IOException {
 
-		
 		System.out.println("\n\nIngrese su nombre de usuario:");
 		String nombreUsuario = scanner.nextLine();
 		Usuario usuario = gestorUsuarios.buscarUsuario(nombreUsuario);
@@ -43,7 +42,7 @@ public class GestorSistema {
 				System.out.println("\n¡Bienvenido, " + nombreUsuario + "!");
 				mostrarMenuTrader(usuario);
 			} else {
-				System.out.println("Muchas gracias.");	
+				System.out.println("Muchas gracias.");
 				iniciarSesion();
 			}
 		}
@@ -95,7 +94,8 @@ public class GestorSistema {
 				this.obtenerDatosCuenta(usuario.getNombre());
 				break;
 			case 8:
-				this.ingresarConOtroUsuario();;
+				this.ingresarConOtroUsuario();
+				;
 				break;
 			case 0:
 				System.out.println("Programa terminado");
@@ -135,9 +135,9 @@ public class GestorSistema {
 				return;
 			}
 			try {
-				this.gestorUsuarios.actualizarSaldoUsuario(usuario, monto,"compra");
+				this.gestorUsuarios.actualizarSaldoUsuario(usuario, monto, "compra");
 				this.gestor.comprarCripto(simbolo.toUpperCase(), monto);
-				this.gestorUsuarios.registrarCompra(usuario, simbolo.toUpperCase(), monto);	
+				this.gestorUsuarios.registrarCompra(usuario, simbolo.toUpperCase(), monto);
 			} catch (Exception e) {
 				System.out.println("Ocurrio un error");
 			}
@@ -160,9 +160,9 @@ public class GestorSistema {
 			System.out.println("La Criptomoneda con el símbolo '" + simbolo.toUpperCase() + "' NO existe!\n");
 			return;
 		}
-		
-		if(!gestorUsuarios.validarExistenciaCriptoHistorico(usuario, simbolo.toUpperCase())) {
-			System.out.println("No posee la Criptomoneda con el símbolo  " + simbolo+"\n");
+
+		if (!gestorUsuarios.validarExistenciaCriptoHistorico(usuario, simbolo.toUpperCase())) {
+			System.out.println("No posee la Criptomoneda con el símbolo  " + simbolo + "\n");
 			return;
 		}
 
@@ -188,7 +188,7 @@ public class GestorSistema {
 
 		if (respuesta.equals("S")) {
 			try {
-				this.gestorUsuarios.actualizarSaldoUsuario(usuario, cantidad,"venta");
+				this.gestorUsuarios.actualizarSaldoUsuario(usuario, cantidad, "venta");
 				this.gestor.venderCripto(simbolo.toUpperCase(), cantidad);
 				this.gestorUsuarios.registrarVenta(usuario, simbolo.toUpperCase(), cantidad);
 				System.out.println("\nLa venta fue realizada con éxito");
@@ -246,9 +246,9 @@ public class GestorSistema {
 		}
 
 	}
-	
+
 	private void obtenerDatosCuenta(String id) {
-		
+
 		System.out.println("================= [7] OBTENER DATOS CUENTA ================\n");
 		this.gestorUsuarios.obtenerDatosCuenta(id);
 	}
@@ -303,7 +303,8 @@ public class GestorSistema {
 				this.eliminarCripto();
 				break;
 			case 9:
-				this.ingresarConOtroUsuario();;
+				this.ingresarConOtroUsuario();
+				;
 				break;
 			case 0:
 				System.out.println("Programa terminado");
@@ -322,7 +323,7 @@ public class GestorSistema {
 	}
 
 	private void mostrarMercados(String numero) {
-		System.out.println("================= ["+numero+"] MERCADO ================\n");
+		System.out.println("================= [" + numero + "] MERCADO ================\n");
 		System.out.println(this.gestor.getMercados());
 	}
 
@@ -531,15 +532,15 @@ public class GestorSistema {
 			}
 		} while (opcion != 0);
 	}
-	
+
 	private void ingresarConOtroUsuario() {
-		
+
 		try {
 			iniciarSesion();
 		} catch (IOException e) {
 			System.out.println("Error al iniciar sesion");
 			e.printStackTrace();
 		}
-		
+
 	}
 }
