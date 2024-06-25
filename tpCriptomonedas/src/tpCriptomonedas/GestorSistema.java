@@ -132,7 +132,7 @@ public class GestorSistema {
 
 			if (!this.gestorUsuarios.validarSaldoUsuario(usuario, monto)) {
 				System.out.println("Saldo insuficiente. Ingrese el dinero faltante en su cuenta bancaria.");
-				 scanner.nextLine();
+				scanner.nextLine();
 				return;
 			}
 			try {
@@ -143,7 +143,7 @@ public class GestorSistema {
 				System.out.println("Ocurrio un error");
 			}
 
-			System.out.println("\nLa compra fue realizada con exito");
+			System.out.println("\nTransaccion Finalizada");
 			scanner.nextLine();
 
 		} else
@@ -165,7 +165,7 @@ public class GestorSistema {
 
 		if (!gestorUsuarios.validarExistenciaCriptoHistorico(usuario, simbolo.toUpperCase())) {
 			System.out.println("No posee la Criptomoneda con el símbolo  " + simbolo + "\n");
-			 scanner.nextLine();
+			scanner.nextLine();
 
 			return;
 		}
@@ -174,7 +174,7 @@ public class GestorSistema {
 
 		if (cantidadMaxima == 0) {
 			System.out.println("No tienes suficientes criptomonedas para vender.\n");
-			 scanner.nextLine();
+			scanner.nextLine();
 
 			return;
 		}
@@ -186,7 +186,7 @@ public class GestorSistema {
 		if (cantidad > cantidadMaxima) {
 			System.out.println(
 					"Cantidad ingresada superior a la cantidad máxima que puedes vender. Operación cancelada.\n");
-			 scanner.nextLine();
+			scanner.nextLine();
 			return;
 		}
 
@@ -199,7 +199,7 @@ public class GestorSistema {
 				this.gestor.venderCripto(simbolo.toUpperCase(), cantidad);
 				this.gestorUsuarios.registrarVenta(usuario, simbolo.toUpperCase(), cantidad);
 				System.out.println("\nLa venta fue realizada con éxito");
-				 scanner.nextLine();
+				scanner.nextLine();
 			} catch (Exception e) {
 				System.out.println("Ocurrió un error durante la venta.");
 				e.printStackTrace();
@@ -222,7 +222,7 @@ public class GestorSistema {
 
 			System.out.println("Luego de realizar una evaluacion estadistica se indica que: \n");
 			System.out.println("La Cripto recomendada es:" + mercado);
-			 scanner.nextLine();
+			scanner.nextLine();
 
 		} catch (IOException e) {
 			System.out.println("Ocurrio un error");
@@ -249,7 +249,7 @@ public class GestorSistema {
 
 		try {
 			this.gestorUsuarios.consultarHistorico(usuario, opcion);
-			 scanner.nextLine();
+			scanner.nextLine();
 		} catch (IOException e) {
 			System.out.println("Ocurrio un error");
 			e.printStackTrace();
@@ -261,7 +261,7 @@ public class GestorSistema {
 
 		System.out.println("================= [7] OBTENER DATOS CUENTA ================\n");
 		this.gestorUsuarios.obtenerDatosCuenta(id);
-		 scanner.nextLine();
+		scanner.nextLine();
 	}
 
 	private void mostrarMenuAdmin() {
@@ -322,7 +322,7 @@ public class GestorSistema {
 				break;
 			default:
 				System.out.println("La opcion elegida no es Valida!!\n");
-				 scanner.nextLine();
+				scanner.nextLine();
 			}
 		} while (opcion != 0);
 
@@ -332,13 +332,13 @@ public class GestorSistema {
 	private void mostrarCriptomonedas() {
 		System.out.println("================= [1] TODAS LAS CRIPTOMONEDAS ================\n");
 		System.out.println(this.gestor.getCriptomonedas());
-		 scanner.nextLine();
+		scanner.nextLine();
 	}
 
 	private void mostrarMercados(String numero) {
 		System.out.println("================= [" + numero + "] MERCADO ================\n");
 		System.out.println(this.gestor.getMercados());
-		 scanner.nextLine();
+		scanner.nextLine();
 	}
 
 	private void mostrarUnaCripto() {
@@ -349,12 +349,12 @@ public class GestorSistema {
 
 		if (!gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
 			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' NO existe!\n");
-			 scanner.nextLine();
+			scanner.nextLine();
 			return;
 		}
 
 		this.gestor.mostrarUnaCripto(simbolo.toUpperCase());
-		 scanner.nextLine();
+		scanner.nextLine();
 	}
 
 	private void agregarCripto() {
@@ -442,7 +442,7 @@ public class GestorSistema {
 		try {
 			this.gestor.modificarNombreCriptomoneda(simbolo.toUpperCase(), nuevoNombre);
 			System.out.println("\nNombre modificado correctamente!!!\n");
-			 scanner.nextLine();
+			scanner.nextLine();
 		} catch (Exception e) {
 			System.out.println("Ocurrio un error!\n");
 		}
@@ -455,7 +455,7 @@ public class GestorSistema {
 
 		if (!gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
 			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' NO existe!\n");
-			 scanner.nextLine();
+			scanner.nextLine();
 			return;
 		}
 
@@ -464,7 +464,7 @@ public class GestorSistema {
 		try {
 			this.gestor.modificarSimboloCriptomoneda(simbolo.toUpperCase(), nuevoSimbolo.toUpperCase());
 			System.out.println("\nSimbolo modificado correctamente\n");
-			 scanner.nextLine();
+			scanner.nextLine();
 		} catch (Exception e) {
 			System.out.println("Ocurrio un error!\n");
 		}
@@ -477,10 +477,10 @@ public class GestorSistema {
 
 		if (!gestor.buscarCriptomoneda(simbolo.toUpperCase())) {
 			System.out.println("La Criptomoneda con el símbolo '" + simbolo + "' NO existe!\n");
-			 scanner.nextLine();
+			scanner.nextLine();
 			return;
 		}
-		
+
 		this.gestor.mostrarUnaCripto(simbolo.toUpperCase());
 
 		System.out.println("\n\nNuevo Precio:");
@@ -494,7 +494,7 @@ public class GestorSistema {
 		try {
 			this.gestor.modificarPrecioCriptomoneda(simbolo.toUpperCase(), nuevoPrecio);
 			System.out.println("Precio modificado correctamente\n");
-			 scanner.nextLine();
+			scanner.nextLine();
 		} catch (Exception e) {
 			System.out.println("Ocurrio un error!\n");
 		}
@@ -544,7 +544,7 @@ public class GestorSistema {
 				try {
 					this.gestor.eliminarCriptomoneda(simbolo.toUpperCase());
 					System.out.println("Cripto eliminada correctamente\n");
-					 scanner.nextLine();
+					scanner.nextLine();
 				} catch (Exception e) {
 					System.out.println("La Cripto no se ha podido eliminar\n");
 				}
